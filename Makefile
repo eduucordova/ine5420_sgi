@@ -1,7 +1,13 @@
 INCLUDE=include/
 
 SOURCE_FILES=$(wildcard ./src/*.hpp) $(wildcard ./src/*.cpp)
+OUTPUT=sgi
+
 all: $(SOURCE_FILES)
-	g++ `pkg-config --cflags gtk+-3.0` -o sgi $(SOURCE_FILES) `pkg-config --libs gtk+-3.0` -std=c++11 -rdynamic
+	g++ `pkg-config --cflags gtk+-3.0` -o ${OUTPUT} $(SOURCE_FILES) `pkg-config --libs gtk+-3.0` -std=c++11 -rdynamic
 clean:
-	rm sgi
+	rm ${OUTPUT}
+run:
+	make
+	./${OUTPUT}
+	make clean
