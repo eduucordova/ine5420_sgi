@@ -5,6 +5,7 @@
 
 #include <gtk/gtk.h>
 #include "Commom.hpp"
+#include "Point.hpp"
 
 namespace UI {
     class MainWindow {
@@ -53,10 +54,14 @@ namespace UI {
         guint context_id = gtk_statusbar_get_context_id (status_bar, msg);
         gtk_statusbar_push(status_bar, context_id, msg);
     }
+
+
 }
 
 #include <stdlib.h>
-
+#include <iostream>
+#include <vector>
+std::vector<Coordinate *> *auxCoord;
 // MainWindow events
 extern "C"
 G_MODULE_EXPORT {
@@ -108,7 +113,6 @@ extern "C"
 G_MODULE_EXPORT {
     void on_btn_close_clicked() {
         gtk_widget_hide(window_add_figure);
-
         UI::write_status("window add figure close");
     }
 
@@ -116,18 +120,10 @@ G_MODULE_EXPORT {
         double x = atof(gtk_entry_get_text(entry_ponto_x));
         double y = atof(gtk_entry_get_text(entry_ponto_y));
 
-        cairo_t *cr;
-
-        cr = cairo_create(surface);
-
-        cairo_set_line_width(cr, 1);
-        cairo_arc(cr, x, y, 1, 0, 10);
-        cairo_stroke_preserve(cr);
-        cairo_fill(cr);
-
-        cairo_destroy(cr);
-
-        gtk_widget_queue_draw_area (drawing_area, 0 , 0, 900, 900);
+        // Coordinate *coord = new Coordinate(x, y);
+        // auxCoord->push_back(coord);
+        //
+        // Point *ponto = new Point("nome", auxCoord);
 
         gtk_widget_hide(window_add_figure);
 
