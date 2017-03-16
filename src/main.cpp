@@ -1,8 +1,9 @@
+
 #include <gtk/gtk.h>
-#include "mainWindow.hpp"
+#include "Windows.hpp"
 
-int main(int argc, char *argv[]){
-
+int main(int argc, char *argv[])
+{
 	gtk_init(&argc, &argv);
 	UI::MainWindow w;
 	return w.init();

@@ -32,7 +32,6 @@ class ListaEnc {
 		bool maior(T dado1, T dado2);
 		bool menor(T dado1, T dado2);
 		void destroiLista();
-
 	private:
 		Elemento<T>* head;
 		int size;

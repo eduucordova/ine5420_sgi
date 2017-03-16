@@ -1,6 +1,6 @@
 INCLUDE=include/
 
-SOURCE_FILES=$(wildcard ./src/*.hpp) $(wildcard ./src/*.cpp)
+SOURCE_FILES=$(wildcard src/main.cpp)
 OUTPUT=sgi
 
 all: $(SOURCE_FILES)
@@ -8,6 +8,6 @@ all: $(SOURCE_FILES)
 clean:
 	rm ${OUTPUT}
 run:
+	make clean
 	make
 	./${OUTPUT}
-	make clean
