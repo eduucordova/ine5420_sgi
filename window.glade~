@@ -329,6 +329,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="margin_bottom">5</property>
+                    <signal name="clicked" handler="on_btn_add_line_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="x">318</property>
@@ -472,13 +473,14 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button_add_coordenada">
+                  <object class="GtkButton" id="btn_add_coordenada">
                     <property name="label" translatable="yes">Inclui</property>
                     <property name="width_request">100</property>
                     <property name="height_request">20</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <signal name="clicked" handler="on_btn_add_coordenada_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="x">320</property>
@@ -498,7 +500,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="btn_add_poligon">
+                  <object class="GtkButton" id="btn_add_polygon">
                     <property name="label" translatable="yes">Adicionar</property>
                     <property name="width_request">102</property>
                     <property name="height_request">30</property>
@@ -506,6 +508,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="margin_bottom">5</property>
+                    <signal name="clicked" handler="on_btn_add_polygon_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="x">318</property>

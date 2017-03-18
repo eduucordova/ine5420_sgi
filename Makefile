@@ -8,6 +8,6 @@ all: $(SOURCE_FILES)
 clean:
 	rm ${OUTPUT}
 run:
-	make clean
 	make
 	./${OUTPUT}
+	make clean
