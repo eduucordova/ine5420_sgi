@@ -16,10 +16,10 @@ struct geometries
 class Geometry {
 public:
     string name;
-    std::list<Coordinate *> *coordinates;
+    std::list<Coordinate *> coordinates;
     geometries::Type type;
 
-    explicit Geometry(geometries::Type _type, string _name, std::list<Coordinate *> *_coordList)
+    explicit Geometry(geometries::Type _type, string _name, std::list<Coordinate *> _coordList)
     : type(_type)
     , name(_name)
     , coordinates(_coordList) { }

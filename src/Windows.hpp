@@ -83,26 +83,44 @@ namespace UI {
 extern "C"
 G_MODULE_EXPORT {
     void on_btn_up_clicked_cb(GtkWidget *button) {
+        window->moveUp(10);
+        viewPort->redraw();
+
         UI::write_status("up");
     }
 
     void on_btn_down_clicked_cb(GtkWidget *button) {
+        window->moveDown(10);
+        viewPort->redraw();
+
         UI::write_status("down");
     }
 
     void on_btn_left_clicked_cb(GtkWidget *button) {
+        window->moveLeft(10);
+        viewPort->redraw();
+
         UI::write_status("left");
     }
 
     void on_btn_right_clicked_cb(GtkWidget *button) {
+        window->moveRight(10);
+        viewPort->redraw();
+
         UI::write_status("right");
     }
 
     void on_btn_zoom_in_clicked_cb(GtkWidget *button) {
+        window->zoom(-10);
+        viewPort->redraw();
+
         UI::write_status("zoom in");
     }
 
     void on_btn_zoom_out_clicked_cb(GtkWidget *button) {
+        window->zoom(10);
+        viewPort->redraw();
+
         UI::write_status("zoom out");
     }
 
@@ -142,7 +160,7 @@ G_MODULE_EXPORT {
 
         coordinates.push_back(new Coordinate(x, y));
 
-        window->AddPoint(&coordinates);
+        window->AddPoint(coordinates);
         viewPort->redraw();
 
         coordinates.clear();
@@ -166,7 +184,7 @@ G_MODULE_EXPORT {
         coordinates.push_back(new Coordinate(x1, y1));
         coordinates.push_back(new Coordinate(x2, y2));
 
-        window->AddLine(&coordinates);
+        window->AddLine(coordinates);
         viewPort->redraw();
 
         coordinates.clear();
@@ -190,7 +208,7 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_polygon_clicked(){
-        window->AddPolygon(&coordinates);
+        window->AddPolygon(coordinates);
         viewPort->redraw();
 
         coordinates.clear();

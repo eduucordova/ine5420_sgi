@@ -34,6 +34,13 @@ public:
 		y = _y;
 	}
 
+	void updateX(double _x) {
+		x += _x;
+	}
+
+	void updateY(double _y) {
+		y += _y;
+	}
 };
 
 #endif

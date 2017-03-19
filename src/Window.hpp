@@ -19,17 +19,49 @@ public:
 
     ~Window() { }
 
-    void AddPoint(std::list<Coordinate*> *coordinates) {
+    void moveUp(int steps)
+    {
+        Wmax.updateY(steps);
+        Wmin.updateY(steps);
+    }
+
+    void moveDown(int steps)
+    {
+        Wmax.updateY(-1 * steps);
+        Wmin.updateY(-1 * steps);
+    }
+
+    void moveLeft(int steps)
+    {
+        Wmax.updateX(-1 * steps);
+        Wmin.updateX(-1 * steps);
+    }
+
+    void moveRight(int steps)
+    {
+        Wmax.updateX(steps);
+        Wmin.updateX(steps);
+    }
+
+    void zoom(int size)
+    {
+        Wmax.updateX(size);
+        Wmax.updateY(size);
+        Wmin.updateX(-1 * size);
+        Wmin.updateY(-1 * size);
+    }
+
+    void AddPoint(std::list<Coordinate*> coordinates) {
         Geometry *point = new Point(geometries::point, "point_" + std::to_string(pointCount++), coordinates);
         displayFile.push_back(point);
     }
 
-    void AddLine(std::list<Coordinate*> *coordinates) {
+    void AddLine(std::list<Coordinate*> coordinates) {
         Geometry *line = new Line(geometries::line, "line_" + std::to_string(lineCount++), coordinates);
         displayFile.push_back(line);
     }
 
-    void AddPolygon(std::list<Coordinate*> *coordinates) {
+    void AddPolygon(std::list<Coordinate*> coordinates) {
         Geometry *polygon = new Polygon(geometries::polygon, "polygon_" + std::to_string(polygonCount++), coordinates);
         displayFile.push_back(polygon);
     }
@@ -45,7 +77,6 @@ public:
     }
 
     std::list<Geometry *> displayFile;
-
 private:
     int pointCount = 0;
     int lineCount = 0;

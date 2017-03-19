@@ -26,9 +26,14 @@ public:
     ~ViewPort() {}
 
     void redraw() {
+        cr = cairo_create (surface);
+        cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); /* blank to white */
+        cairo_paint (cr);
+        cairo_destroy (cr);
+
         std::list<Coordinate> transformedCoordinates;
         for(auto geometry : window->displayFile) {
-            for(auto coordinate : *(geometry->coordinates)) {
+            for(auto coordinate : geometry->coordinates) {
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }
             draw(geometry->type, &transformedCoordinates);
@@ -47,6 +52,7 @@ public:
                 cairo_arc(cr, coordinate.getX(), coordinate.getY(), 1, 0, 10);
                 cairo_stroke_preserve(cr);
                 cairo_fill(cr);
+                gtk_widget_queue_draw_area (drawing_area, 0 , 0, yMax, xMax);
                 break;
             }
             default:
@@ -121,7 +127,7 @@ static gboolean create_surface (GtkWidget *widget, GdkEventConfigure *event, gpo
 
     xMax = gtk_widget_get_allocated_width (widget);
     yMax = gtk_widget_get_allocated_height (widget);
-    
+
     clear_surface ();
     return TRUE;
 }
