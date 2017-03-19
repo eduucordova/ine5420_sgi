@@ -3,9 +3,11 @@
 #ifndef POINT_HPP_
 #define POINT_HPP_
 
-#include "Geometry.hpp"
-#include <vector>
+#include <iostream>
+#include <list>
 #include <string>
+
+#include "Geometry.hpp"
 
 class Point : public Geometry {
 public:
@@ -13,7 +15,7 @@ public:
 
 protected:
     string name;
-    std::vector<Coordinate *> *coordinates;
+    std::list<Coordinate *> *coordinates;
 };
 
 #endif /* end of include guard: POINT_HPP_ */

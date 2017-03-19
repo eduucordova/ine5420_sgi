@@ -4,17 +4,24 @@
 #define GEOMETRY_HPP_
 
 #include <string>
-#include "Coordinate.hpp"
 #include <iostream>
-#include <vector>
+#include <list>
 
+#include "Coordinate.hpp"
+
+struct geometries
+{
+    enum Type { point, line, polygon };
+};
 class Geometry {
-protected:
-    string name;
-    std::vector<Coordinate *> *coordinates;
 public:
-    explicit Geometry(string _name, std::vector<Coordinate *> *_coordList)
-    : name(_name)
+    string name;
+    std::list<Coordinate *> *coordinates;
+    geometries::Type type;
+
+    explicit Geometry(geometries::Type _type, string _name, std::list<Coordinate *> *_coordList)
+    : type(_type)
+    , name(_name)
     , coordinates(_coordList) { }
 
     virtual ~Geometry() {};

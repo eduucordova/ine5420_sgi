@@ -22,7 +22,7 @@ public:
 		return x;
 	}
 
-	double getY()	{
+	double getY() {
 		return y;
 	}
 

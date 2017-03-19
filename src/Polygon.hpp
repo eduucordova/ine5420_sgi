@@ -3,9 +3,11 @@
 #ifndef POLYGON_HPP_
 #define POLYGON_HPP_
 
-#include "Geometry.hpp"
-#include <vector>
+#include <list>
+#include <iostream>
 #include <string>
+
+#include "Geometry.hpp"
 
 class Polygon : public Geometry {
 public:
@@ -13,7 +15,7 @@ public:
 
 protected:
     string name;
-    std::vector<Coordinate *> *coordinates;
+    std::list<Coordinate *> *coordinates;
 };
 
 #endif /* end of include guard: POLYGON_HPP_ */

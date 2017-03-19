@@ -3,27 +3,21 @@
 #ifndef WINDOWS_HPP_
 #define WINDOWS_HPP_
 
-#include "Commom.hpp"
-#include "Point.hpp"
-#include "Window.hpp"
-#include "Viewport.hpp"
-
 #include <gtk/gtk.h>
 #include <stdlib.h>
 #include <iostream>
 #include <list>
+
+#include "Commom.hpp"
+#include "Point.hpp"
+#include "Window.hpp"
+#include "Viewport.hpp"
 
 class ViewPort;
 class Window;
 
 ViewPort * viewPort;
 Window * window;
-
-struct {
-  int count;
-  double coordx[100];
-  double coordy[100];
-} glob;
 
 std::list<Coordinate*> coordinates;
 
@@ -33,8 +27,6 @@ namespace UI {
         MainWindow() { }
 
         int init() {
-            glob.count = 0;
-
             gtkBuilder = gtk_builder_new();
 
             gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
@@ -45,20 +37,18 @@ namespace UI {
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
             status_bar = GTK_STATUSBAR(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "actions_status"));
 
-            viewPort = new ViewPort(gtk_widget_get_allocated_width(drawing_area), gtk_widget_get_allocated_height(drawing_area));
-
             g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
             g_signal_connect (drawing_area,"configure-event", G_CALLBACK (create_surface), NULL);
 
             gtk_builder_connect_signals(gtkBuilder, NULL);
             gtk_widget_show_all(window_widget);
 
+            viewPort = new ViewPort(window, gtk_widget_get_allocated_width(drawing_area), gtk_widget_get_allocated_height(drawing_area));
+
             gtk_main();
 
             return 0;
         }
-
-
     };
 
     class AddFigureWindow {
@@ -151,7 +141,9 @@ G_MODULE_EXPORT {
         double y = atof(gtk_entry_get_text(entry_ponto_y));
 
         coordinates.push_back(new Coordinate(x, y));
-        viewPort->draw(0, &coordinates);
+
+        window->AddPoint(&coordinates);
+        viewPort->redraw();
 
         coordinates.clear();
 
@@ -174,7 +166,8 @@ G_MODULE_EXPORT {
         coordinates.push_back(new Coordinate(x1, y1));
         coordinates.push_back(new Coordinate(x2, y2));
 
-        viewPort->draw(1, &coordinates);
+        window->AddLine(&coordinates);
+        viewPort->redraw();
 
         coordinates.clear();
 
@@ -197,8 +190,9 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_polygon_clicked(){
-        viewPort->draw(1, &coordinates);
-        
+        window->AddPolygon(&coordinates);
+        viewPort->redraw();
+
         coordinates.clear();
 
         gtk_widget_hide(window_add_figure);
