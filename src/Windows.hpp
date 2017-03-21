@@ -29,7 +29,7 @@ namespace UI {
         int init() {
             gtkBuilder = gtk_builder_new();
 
-            gtk_builder_add_from_file(gtkBuilder, "src/window.glade", NULL);
+            gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
 
             window = new Window(Coordinate(0.0, 0.0), Coordinate(100.0, 100.0));
 
