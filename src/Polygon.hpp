@@ -13,9 +13,9 @@ class Polygon : public Geometry {
 public:
     using Geometry::Geometry;
 
-protected:
-    string name;
-    std::list<Coordinate *> *coordinates;
+// protected:
+//     string name;
+//     std::list<Coordinate *> *coordinates;
 };
 
 #endif /* end of include guard: POLYGON_HPP_ */
