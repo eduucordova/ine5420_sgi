@@ -18,6 +18,7 @@ class Window;
 
 ViewPort * viewPort;
 Window * window;
+GtkTreeIter iterObjectList;
 
 std::list<Coordinate*> coordinates;
 
@@ -34,8 +35,14 @@ namespace UI {
             window = new Window(Coordinate(-100.0, -100.0), Coordinate(100.0, 100.0));
 
             window_widget = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "main_window"));
+            
+            tree_object_list = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "tree_objects_list"));
+            object_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "object_list"));
+
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
             status_bar = GTK_STATUSBAR(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "actions_status"));
+
+            initObjectList();
 
             g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
             g_signal_connect (drawing_area,"configure-event", G_CALLBACK (create_surface), NULL);
@@ -48,6 +55,20 @@ namespace UI {
             gtk_main();
 
             return 0;
+        }
+
+        void initObjectList(){
+            GtkCellRenderer *renderer;
+           
+            renderer = gtk_cell_renderer_text_new ();
+
+            gtk_tree_view_insert_column_with_attributes (
+                tree_object_list, -1,      
+                "Nome", renderer,
+                "text", 0,
+                NULL);
+
+            gtk_tree_view_set_model (tree_object_list, GTK_TREE_MODEL (object_list));
         }
     };
 
@@ -72,6 +93,17 @@ namespace UI {
             return 0;
         }
     };
+
+    static void store_figure(string name){
+        const char *ascii_name = g_str_to_ascii (name.c_str(), NULL);
+        printf("%s\n", name.c_str());
+        gtk_list_store_append (object_list, &iterObjectList);;
+        gtk_list_store_set(
+            object_list, &iterObjectList, 
+            0, ascii_name, 
+            -1);
+
+    }
 
     static void write_status(const char *msg){
         guint context_id = gtk_statusbar_get_context_id (status_bar, msg);
@@ -160,12 +192,14 @@ G_MODULE_EXPORT {
 
         coordinates.push_back(new Coordinate(x, y));
 
-        window->AddPoint(coordinates);
+        string name = window->AddPoint(coordinates);
         viewPort->redraw();
 
         coordinates.clear();
 
         gtk_widget_hide(window_add_figure);
+
+        UI::store_figure(name);
 
         char str[50];
         sprintf(str, "point at: %f; %f", x, y);
@@ -184,12 +218,14 @@ G_MODULE_EXPORT {
         coordinates.push_back(new Coordinate(x1, y1));
         coordinates.push_back(new Coordinate(x2, y2));
 
-        window->AddLine(coordinates);
+        string name = window->AddLine(coordinates);
         viewPort->redraw();
 
         coordinates.clear();
 
         gtk_widget_hide(window_add_figure);
+
+        UI::store_figure(name);
 
         char str[255];
         sprintf(str, "line from: %f; %f to %f; %f", x1, y1, x2, y2);
@@ -208,12 +244,15 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_polygon_clicked(){
-        window->AddPolygon(coordinates);
+        string name = window->AddPolygon(coordinates);
         viewPort->redraw();
 
         coordinates.clear();
 
         gtk_widget_hide(window_add_figure);
+
+        UI::store_figure(name);
+
         UI::write_status("drawing polygon");
     }
 }
