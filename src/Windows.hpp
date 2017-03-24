@@ -23,6 +23,10 @@ GtkTreeIter iterObjectList;
 std::list<Coordinate*> coordinates;
 
 namespace UI {
+
+    static void populateForDebug();
+    static void store_figure(string name);
+
     class MainWindow {
     public:
         MainWindow() { }
@@ -35,12 +39,10 @@ namespace UI {
             window = new Window(Coordinate(0.0, 0.0), Coordinate(100.0, 100.0));
 
             window_widget = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "main_window"));
-            
-            tree_object_list = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "tree_objects_list"));
-            object_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "object_list"));
-
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
             status_bar = GTK_STATUSBAR(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "actions_status"));
+            
+            tree_object_list = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "tree_objects_list"));
             object_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "object_list"));
 
             initObjectList();
@@ -52,6 +54,8 @@ namespace UI {
             gtk_widget_show_all(window_widget);
 
             viewPort = new ViewPort(window, gtk_widget_get_allocated_width(drawing_area), gtk_widget_get_allocated_height(drawing_area));
+            populateForDebug();
+            viewPort->redraw();
 
             gtk_main();
 
@@ -71,6 +75,7 @@ namespace UI {
 
             gtk_tree_view_set_model (tree_object_list, GTK_TREE_MODEL (object_list));
         }
+
     };
 
     class AddFigureWindow {
@@ -95,9 +100,21 @@ namespace UI {
         }
     };
 
-    static void store_figure(string name){
+    static void populateForDebug() {
+            std::list<Coordinate*> coordinates;
+            coordinates.push_back(new Coordinate(25, 25));
+            coordinates.push_back(new Coordinate(32, 76));
+            coordinates.push_back(new Coordinate(87, 69));
+            coordinates.push_back(new Coordinate(92, 32));
+            coordinates.push_back(new Coordinate(41, 46));
+            
+            string name = window->AddPolygon(coordinates);
+            store_figure(name);
+    }
+
+    static void store_figure(const string name){
         const char *ascii_name = g_str_to_ascii (name.c_str(), NULL);
-        printf("%s\n", name.c_str());
+        printf("%s\n", ascii_name);
         gtk_list_store_append (object_list, &iterObjectList);;
         gtk_list_store_set(
             object_list, &iterObjectList, 
@@ -118,9 +135,6 @@ G_MODULE_EXPORT {
     void on_btn_up_clicked_cb(GtkWidget *button) {
         window->moveUp(10);
         viewPort->redraw();
-
-        gtk_list_store_append (object_list, &iter);
-        gtk_list_store_set (object_list, &iter, 0, "Foo", -1);
 
         UI::write_status("up");
     }

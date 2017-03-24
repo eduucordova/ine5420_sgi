@@ -646,13 +646,10 @@
                     <property name="model">object_list</property>
                     <property name="headers_clickable">False</property>
                     <property name="enable_search">False</property>
-                    <property name="fixed_height_mode">True</property>
                     <property name="enable_grid_lines">horizontal</property>
                     <property name="activate_on_single_click">True</property>
                     <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="tree_objects_list_objects_list_selection">
-                        <property name="mode">none</property>
-                      </object>
+                      <object class="GtkTreeSelection" id="tree_objects_list_objects_list_selection"/>
                     </child>
                   </object>
                 </child>
@@ -711,7 +708,7 @@
                         <signal name="clicked" handler="on_btn_up_clicked_cb" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="x">71</property>
+                        <property name="x">100</property>
                         <property name="y">24</property>
                       </packing>
                     </child>
@@ -724,7 +721,7 @@
                         <signal name="clicked" handler="on_btn_left_clicked_cb" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="x">51</property>
+                        <property name="x">79</property>
                         <property name="y">52</property>
                       </packing>
                     </child>
@@ -737,7 +734,7 @@
                         <signal name="clicked" handler="on_btn_right_clicked_cb" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="x">91</property>
+                        <property name="x">120</property>
                         <property name="y">52</property>
                       </packing>
                     </child>
@@ -750,7 +747,7 @@
                         <signal name="clicked" handler="on_btn_down_clicked_cb" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="x">71</property>
+                        <property name="x">100</property>
                         <property name="y">80</property>
                       </packing>
                     </child>
@@ -795,9 +792,7 @@
               <object class="GtkBox" id="box9">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="valign">center</property>
-                <property name="margin_left">10</property>
+                <property name="margin_left">5</property>
                 <property name="margin_top">2</property>
                 <property name="homogeneous">True</property>
                 <child>
@@ -819,9 +814,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
                     <property name="margin_left">4</property>
+                    <property name="margin_right">1</property>
                     <property name="image">img_btn_zoom_in</property>
                     <signal name="clicked" handler="on_btn_zoom_in_clicked_cb" swapped="no"/>
                   </object>
@@ -836,9 +830,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">11</property>
+                    <property name="margin_left">4</property>
+                    <property name="margin_right">2</property>
                     <property name="image">img_btn_zoom_out</property>
                     <signal name="clicked" handler="on_btn_zoom_out_clicked_cb" swapped="no"/>
                   </object>
@@ -861,6 +854,7 @@
                 <property name="can_focus">False</property>
                 <property name="margin_left">8</property>
                 <property name="margin_top">2</property>
+                <property name="homogeneous">True</property>
                 <child>
                   <object class="GtkLabel" id="lbl_rotate">
                     <property name="visible">True</property>
