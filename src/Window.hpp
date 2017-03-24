@@ -14,10 +14,20 @@ public:
     : Wmin(_Wmin)
     , Wmax(_Wmax)
     {
-        // displayFile = new ListaEnc<Geometry *>();
+        populateForDebug();
     }
 
     ~Window() { }
+
+    void populateForDebug() {
+        std::list<Coordinate*> coordinates;
+        coordinates.push_back(new Coordinate(25, 25));
+        coordinates.push_back(new Coordinate(32, 76));
+        coordinates.push_back(new Coordinate(87, 69));
+        coordinates.push_back(new Coordinate(92, 32));
+        coordinates.push_back(new Coordinate(41, 46));
+        AddPolygon(coordinates);
+    }
 
     void moveUp(int steps)
     {

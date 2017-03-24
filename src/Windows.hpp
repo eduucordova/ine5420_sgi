@@ -32,7 +32,7 @@ namespace UI {
 
             gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
 
-            window = new Window(Coordinate(-100.0, -100.0), Coordinate(100.0, 100.0));
+            window = new Window(Coordinate(0.0, 0.0), Coordinate(100.0, 100.0));
 
             window_widget = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "main_window"));
             
@@ -41,6 +41,7 @@ namespace UI {
 
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
             status_bar = GTK_STATUSBAR(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "actions_status"));
+            object_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "object_list"));
 
             initObjectList();
 
@@ -118,6 +119,9 @@ G_MODULE_EXPORT {
         window->moveUp(10);
         viewPort->redraw();
 
+        gtk_list_store_append (object_list, &iter);
+        gtk_list_store_set (object_list, &iter, 0, "Foo", -1);
+
         UI::write_status("up");
     }
 
@@ -156,12 +160,16 @@ G_MODULE_EXPORT {
         UI::write_status("zoom out");
     }
 
-    void on_steps_button_change_value(GtkSpinButton *spinButton) {
+    void on_btn_rotate_left_clicked(GtkWidget *button) {
+        viewPort->redraw();
 
-        char str[20];
-        guint steps = gtk_spin_button_get_value(spinButton);
-        sprintf(str, "steps changed to: %d", steps);
-        UI::write_status(str);
+        UI::write_status("rotate window left");
+    }
+
+    void on_btn_rotate_right_clicked(GtkWidget *button) {
+        viewPort->redraw();
+
+        UI::write_status("rotate window right");
     }
 
     void on_btn_add_figure_clicked() {
@@ -172,6 +180,95 @@ G_MODULE_EXPORT {
         gtk_widget_show(window_add_figure);
 
         UI::write_status("window add figure open");
+    }
+
+    void on_btn_obj_shrink_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->scaling(0.9, 0.9);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "shrinking object up: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_expand_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->scaling(1.1, 1.1);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "expanding object up: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_up_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->translate(0, 5);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "move object up: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_right_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->translate(5, 0);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "move object right: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_left_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->translate(-5, 0);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "move object left: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_down_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->translate(0, -5);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "move object down: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_rotate_right_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->rotate(10);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "rotate right object: %s", object->name.c_str());
+        UI::write_status(str);
+    }
+    void on_btn_obj_rotate_left_clicked()
+    {
+        // TODO pegar objeto selecionado na TreeView
+        auto object = window->displayFile.front();
+        object->rotate(-10);
+        viewPort->redraw();
+
+        char str[255];
+        sprintf(str, "rotate left object: %s", object->name.c_str());
+        UI::write_status(str);
     }
 }
 

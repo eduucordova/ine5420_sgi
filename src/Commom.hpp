@@ -16,4 +16,6 @@ GtkEntry	 *entry_ponto_y2;
 GtkEntry	 *entry_ponto_x3;
 GtkEntry	 *entry_ponto_y3;
 
+GtkTreeIter iter;
+
 static cairo_surface_t *surface = NULL;
