@@ -21,11 +21,19 @@ public:
 
     void populateForDebug() {
         std::list<Coordinate*> coordinates;
+        coordinates.push_back(new Coordinate(75, 75));
+        coordinates.push_back(new Coordinate(75, 25));
         coordinates.push_back(new Coordinate(25, 25));
-        coordinates.push_back(new Coordinate(32, 76));
-        coordinates.push_back(new Coordinate(87, 69));
-        coordinates.push_back(new Coordinate(92, 32));
-        coordinates.push_back(new Coordinate(41, 46));
+        coordinates.push_back(new Coordinate(25, 75));
+        coordinates.push_back(new Coordinate(75, 75));
+        coordinates.push_back(new Coordinate(75, 25));
+        coordinates.push_back(new Coordinate(80, 20));
+        coordinates.push_back(new Coordinate(30, 20));
+        coordinates.push_back(new Coordinate(25, 25));
+        coordinates.push_back(new Coordinate(75, 25));
+        coordinates.push_back(new Coordinate(80, 20));
+        coordinates.push_back(new Coordinate(80, 70));
+
         AddPolygon(coordinates);
     }
 
