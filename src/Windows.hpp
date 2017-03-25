@@ -59,7 +59,7 @@ namespace UI {
             gtk_widget_show_all(window_widget);
 
             viewPort = new ViewPort(window, gtk_widget_get_allocated_width(drawing_area), gtk_widget_get_allocated_height(drawing_area));
-            populateForDebug();
+            //populateForDebug();
             viewPort->redraw();
 
             gtk_main();
