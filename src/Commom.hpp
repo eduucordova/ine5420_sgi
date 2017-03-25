@@ -7,6 +7,8 @@ GtkWidget    *window_add_figure;
 GtkStatusbar *status_bar;
 GtkTreeView  *tree_object_list;
 GtkListStore *object_list;
+GtkTreeView  *polygon_coordinates;
+GtkListStore *polygon_coordinates_list;
 GtkEntry	 *entry_ponto_x;
 GtkEntry	 *entry_ponto_y;
 GtkEntry	 *entry_ponto_x1;
