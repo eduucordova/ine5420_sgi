@@ -19,6 +19,7 @@ class Window;
 ViewPort * viewPort;
 Window * window;
 GtkTreeIter iterObjectList;
+GtkTreeIter iterCoordList;
 
 std::list<Coordinate*> coordinates;
 
@@ -44,8 +45,12 @@ namespace UI {
             
             tree_object_list = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "tree_objects_list"));
             object_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "object_list"));
-
             initObjectList();
+
+            polygon_coordinates = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "polygon_coordinates"));
+            polygon_coordinates_list = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "polygon_coordinates_list"));
+            initCoordinteList();
+
 
             g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
             g_signal_connect (drawing_area,"configure-event", G_CALLBACK (create_surface), NULL);
@@ -76,6 +81,19 @@ namespace UI {
             gtk_tree_view_set_model (tree_object_list, GTK_TREE_MODEL (object_list));
         }
 
+        void initCoordinteList(){
+            GtkCellRenderer *renderer;
+           
+            renderer = gtk_cell_renderer_text_new ();
+
+            gtk_tree_view_insert_column_with_attributes (
+                polygon_coordinates, -1,      
+                "Coordinates", renderer,
+                "text", 0,
+                NULL);
+
+            gtk_tree_view_set_model (polygon_coordinates, GTK_TREE_MODEL (polygon_coordinates_list));
+        }
     };
 
     class AddFigureWindow {
@@ -113,14 +131,23 @@ namespace UI {
     }
 
     static void store_figure(const string name){
-        const char *ascii_name = g_str_to_ascii (name.c_str(), NULL);
-        printf("%s\n", ascii_name);
+        const char *ascii_name = name.c_str();
+        // printf("%s\n", ascii_name);
         gtk_list_store_append (object_list, &iterObjectList);;
         gtk_list_store_set(
             object_list, &iterObjectList, 
             0, ascii_name, 
             -1);
+    }
 
+    static void store_coordinate(Coordinate *coordinate){
+        char coord[50];
+        sprintf(coord, "x: %f; y: %f", coordinate->getX(), coordinate->getY());
+        gtk_list_store_append (polygon_coordinates_list, &iterCoordList);
+        gtk_list_store_set(
+            polygon_coordinates_list, &iterCoordList, 
+            0, coord,
+            -1);
     }
 
     static void write_status(const char *msg){
@@ -195,95 +222,6 @@ G_MODULE_EXPORT {
 
         UI::write_status("window add figure open");
     }
-
-    void on_btn_obj_shrink_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->scaling(0.9, 0.9);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "shrinking object up: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_expand_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->scaling(1.1, 1.1);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "expanding object up: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_up_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(0, 5);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "move object up: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_right_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(5, 0);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "move object right: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_left_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(-5, 0);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "move object left: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_down_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(0, -5);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "move object down: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_rotate_right_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->rotate(10);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "rotate right object: %s", object->name.c_str());
-        UI::write_status(str);
-    }
-    void on_btn_obj_rotate_left_clicked()
-    {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->rotate(-10);
-        viewPort->redraw();
-
-        char str[255];
-        sprintf(str, "rotate left object: %s", object->name.c_str());
-        UI::write_status(str);
-    }
 }
 
 // AddFigureWindow EVENTS_HPP_
@@ -347,7 +285,9 @@ G_MODULE_EXPORT {
         double x3 = atof(gtk_entry_get_text(entry_ponto_x3));
         double y3 = atof(gtk_entry_get_text(entry_ponto_y3));
 
-        coordinates.push_back(new Coordinate(x3, y3));
+        Coordinate *temp = new Coordinate(x3, y3);
+        UI::store_coordinate(temp);
+        coordinates.push_back(temp);
 
         char str[255];
         sprintf(str, "added coordinate at: %f; %f", x3, y3);
@@ -359,6 +299,7 @@ G_MODULE_EXPORT {
         viewPort->redraw();
 
         coordinates.clear();
+        gtk_list_store_clear(polygon_coordinates_list);
 
         gtk_widget_hide(window_add_figure);
 
