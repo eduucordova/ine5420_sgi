@@ -13,29 +13,9 @@ public:
     Window(const Coordinate &_Wmin, const Coordinate &_Wmax)
     : Wmin(_Wmin)
     , Wmax(_Wmax)
-    {
-        populateForDebug();
-    }
+    { }
 
     ~Window() { }
-
-    void populateForDebug() {
-        std::list<Coordinate*> coordinates;
-        coordinates.push_back(new Coordinate(75, 75));
-        coordinates.push_back(new Coordinate(75, 25));
-        coordinates.push_back(new Coordinate(25, 25));
-        coordinates.push_back(new Coordinate(25, 75));
-        coordinates.push_back(new Coordinate(75, 75));
-        coordinates.push_back(new Coordinate(75, 25));
-        coordinates.push_back(new Coordinate(80, 20));
-        coordinates.push_back(new Coordinate(30, 20));
-        coordinates.push_back(new Coordinate(25, 25));
-        coordinates.push_back(new Coordinate(75, 25));
-        coordinates.push_back(new Coordinate(80, 20));
-        coordinates.push_back(new Coordinate(80, 70));
-
-        AddPolygon(coordinates);
-    }
 
     void moveUp(int steps)
     {
@@ -69,19 +49,28 @@ public:
         Wmin.updateY(-1 * size);
     }
 
-    void AddPoint(std::list<Coordinate*> coordinates) {
-        Geometry *point = new Point(geometries::point, "point_" + std::to_string(pointCount++), coordinates);
+    string AddPoint(std::list<Coordinate*> coordinates) {
+        string name = "point_" + std::to_string(pointCount++);
+        Geometry *point = new Point(geometries::point, name, coordinates);
         displayFile.push_back(point);
+
+        return name;
     }
 
-    void AddLine(std::list<Coordinate*> coordinates) {
-        Geometry *line = new Line(geometries::line, "line_" + std::to_string(lineCount++), coordinates);
+    string AddLine(std::list<Coordinate*> coordinates) {
+        string name = "line_" + std::to_string(lineCount++);
+        Geometry *line = new Line(geometries::line, name, coordinates);
         displayFile.push_back(line);
+
+        return name;
     }
 
-    void AddPolygon(std::list<Coordinate*> coordinates) {
-        Geometry *polygon = new Polygon(geometries::polygon, "polygon_" + std::to_string(polygonCount++), coordinates);
+    string AddPolygon(std::list<Coordinate*> coordinates) {
+        string name = "polygon_" + std::to_string(polygonCount++);
+        Geometry *polygon = new Polygon(geometries::polygon, name, coordinates);
         displayFile.push_back(polygon);
+
+        return name;
     }
 
     Coordinate *getMinPoint()
@@ -96,9 +85,9 @@ public:
 
     std::list<Geometry *> displayFile;
 private:
-    int pointCount = 0;
-    int lineCount = 0;
-    int polygonCount = 0;
+    int pointCount = 1;
+    int lineCount = 1;
+    int polygonCount = 1;
     Coordinate Wmin, Wmax;
 };
 
