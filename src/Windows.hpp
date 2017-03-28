@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <list>
+#include <glib-object.h>
 
 #include "Commom.hpp"
 #include "Point.hpp"
@@ -20,6 +21,8 @@ ViewPort * viewPort;
 Window * window;
 GtkTreeIter iterObjectList;
 GtkTreeIter iterCoordList;
+GtkTreeSelection * object_selection;
+Geometry *selected_object;
 
 std::list<Coordinate*> coordinates;
 
@@ -58,7 +61,7 @@ namespace UI {
             gtk_widget_show_all(window_widget);
 
             viewPort = new ViewPort(window, gtk_widget_get_allocated_width(drawing_area), gtk_widget_get_allocated_height(drawing_area));
-            //populateForDebug();
+            populateForDebug();
             viewPort->redraw();
 
             gtk_main();
@@ -78,6 +81,8 @@ namespace UI {
                 NULL);
 
             gtk_tree_view_set_model (tree_object_list, GTK_TREE_MODEL (object_list));
+
+            object_selection = gtk_tree_view_get_selection(tree_object_list);
         }
 
         void initCoordinteList(){
@@ -152,6 +157,29 @@ namespace UI {
         guint context_id = gtk_statusbar_get_context_id (status_bar, msg);
         gtk_statusbar_push(status_bar, context_id, msg);
     }
+
+    static bool get_selected_object()
+    {
+        auto model = GTK_TREE_MODEL(object_list);
+        GValue value = G_VALUE_INIT;
+        gtk_tree_selection_get_selected(object_selection, NULL, &iterObjectList);
+
+        if(gtk_list_store_iter_is_valid(object_list, &iterObjectList)) {
+            gtk_tree_model_get_value (model, &iterObjectList, 0, &value);
+    
+            for(auto geometry : window->displayFile)
+            {
+                if(geometry->name == g_value_get_string(&value))
+                {
+                    selected_object = geometry;
+                    g_value_unset(&value);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 // MainWindow events
@@ -223,91 +251,122 @@ G_MODULE_EXPORT {
 
     void on_btn_obj_shrink_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->scaling(0.9, 0.9);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "shrinking object up: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->scaling(0.9, 0.9);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "shrinking object: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_expand_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->scaling(1.1, 1.1);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "expanding object up: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->scaling(1.1, 1.1);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "expanding object: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_up_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(0, 5);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "move object up: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->translate(0, 5);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "move object up: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_right_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(5, 0);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "move object right: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->translate(5, 0);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "move object right: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_left_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(-5, 0);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "move object left: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->translate(-5, 0);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "move object left: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_down_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->translate(0, -5);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "move object down: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->translate(0, -5);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "move object down: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_rotate_right_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->rotate(10);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "rotate right object: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->rotate(10);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "rotate right object: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
+
     void on_btn_obj_rotate_left_clicked()
     {
-        // TODO pegar objeto selecionado na TreeView
-        auto object = window->displayFile.front();
-        object->rotate(-10);
-        viewPort->redraw();
+        if(UI::get_selected_object()) {
 
-        char str[255];
-        sprintf(str, "rotate left object: %s", object->name.c_str());
-        UI::write_status(str);
+            selected_object->rotate(-10);
+            viewPort->redraw();
+
+            char str[255];
+            sprintf(str, "rotate left object: %s", selected_object->name.c_str());
+            UI::write_status(str);
+        }
+        else
+            UI::write_status("No objects selected.");
     }
 }
 
