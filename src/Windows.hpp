@@ -40,7 +40,7 @@ namespace UI {
 
             gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
 
-            window = new Window(Coordinate(0.0, 0.0), Coordinate(100.0, 100.0));
+            window = new Window(Coordinate(-100.0, -100.0), Coordinate(100.0, 100.0));
 
             window_widget = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "main_window"));
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
@@ -214,26 +214,28 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_zoom_in_clicked_cb(GtkWidget *button) {
-        window->zoom(-10);
+        window->zoom(0.85);
         viewPort->redraw();
 
         UI::write_status("zoom in");
     }
 
     void on_btn_zoom_out_clicked_cb(GtkWidget *button) {
-        window->zoom(10);
+        window->zoom(1.15);
         viewPort->redraw();
 
         UI::write_status("zoom out");
     }
 
     void on_btn_rotate_left_clicked(GtkWidget *button) {
+        window->rotate(-45);
         viewPort->redraw();
 
         UI::write_status("rotate window left");
     }
 
     void on_btn_rotate_right_clicked(GtkWidget *button) {
+        window->rotate(45);
         viewPort->redraw();
 
         UI::write_status("rotate window right");

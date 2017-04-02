@@ -93,9 +93,10 @@
     </columns>
   </object>
   <object class="GtkWindow" id="main_window">
-    <property name="width_request">800</property>
+    <property name="width_request">816</property>
     <property name="height_request">600</property>
     <property name="can_focus">False</property>
+    <property name="valign">start</property>
     <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
@@ -622,13 +623,15 @@
                               <object class="GtkAlignment" id="alignment2">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="margin_right">5</property>
+                                <property name="margin_bottom">5</property>
                                 <property name="left_padding">12</property>
                                 <child>
                                   <object class="GtkDrawingArea" id="drawing_area">
+                                    <property name="width_request">544</property>
+                                    <property name="height_request">544</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_right">5</property>
-                                    <property name="margin_bottom">5</property>
                                   </object>
                                 </child>
                               </object>

@@ -18,12 +18,14 @@ class Geometry {
 public:
     string name;
     std::list<Coordinate *> coordinates;
+    std::list<Coordinate *> ppcCoordinates;
     geometries::Type type;
 
     explicit Geometry(geometries::Type _type, string _name, std::list<Coordinate *> _coordList)
     : type(_type)
     , name(_name)
-    , coordinates(_coordList) { }
+    , coordinates(_coordList)
+    , ppcCoordinates(_coordList) { }
 
     virtual ~Geometry() {};
 
@@ -45,7 +47,7 @@ public:
     void translate(float dx, float dy) {
         auto T_matrix = Transformation::TranslateMatrix(dx, dy);
 
-        for(auto coordinate : coordinates) {
+        for(auto coordinate : ppcCoordinates) {
             coordinate->transform(T_matrix);
         }
     }
@@ -59,7 +61,7 @@ public:
 
         auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, S_matrix), T_matrix2);
 
-        for(auto coordinate : coordinates) {
+        for(auto coordinate : ppcCoordinates) {
             coordinate->transform(result);
         }
     }
@@ -73,7 +75,7 @@ public:
 
         auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, R_matrix), T_matrix2);
 
-        for(auto coordinate : coordinates) {
+        for(auto coordinate : ppcCoordinates) {
             coordinate->transform(result);
         }
     }

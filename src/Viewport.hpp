@@ -33,7 +33,7 @@ public:
 
         std::list<Coordinate> transformedCoordinates;
         for(auto geometry : window->displayFile) {
-            for(auto coordinate : geometry->coordinates) {
+            for(auto coordinate : geometry->ppcCoordinates) {
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }
             draw(geometry->type, &transformedCoordinates);
@@ -77,14 +77,16 @@ public:
         /**
         * Xvp = ((Xw - Xwmin) / (Xwmax - Xwmin)) * (Xvpmax - Xvpmin)
         */
-        auto windowWidth = window->getMaxPoint()->getX() - window->getMinPoint()->getX();
+        auto windowWidth = window->WindowWidth();
+
         // auto viewPortWidth = width()/*maxVpPoint.getX() - minVpPoint.getX()*/;
         auto xvp = ((pointOnWindow->getX() - window->getMinPoint()->getX()) / (windowWidth)) * xMax;
 
         /**
         * Yvp = (1 - ((Yw - Ywmin) / (Ywmax - Ywmin))) * (Yvpmax - Yvpmin)
         */
-        auto windowHeight = window->getMaxPoint()->getY() - window->getMinPoint()->getY();
+        auto windowHeight = window->WindowHeight();
+
         // auto viewPortHeight = height()/*maxVpPoint.getY() - minVpPoint.getY()*/;
         auto yvp = (1 - ((pointOnWindow->getY() - window->getMinPoint()->getY()) / (windowHeight))) * yMax;
 
