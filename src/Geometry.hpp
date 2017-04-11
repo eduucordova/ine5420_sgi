@@ -17,15 +17,15 @@ struct geometries
 class Geometry {
 public:
     string name;
-    std::list<Coordinate *> coordinates;
-    std::list<Coordinate *> ppcCoordinates;
+    std::list<Coordinate *> world_coordinates;
+    std::list<Coordinate *> window_coordinates;
     geometries::Type type;
 
     explicit Geometry(geometries::Type _type, string _name, std::list<Coordinate *> _coordList)
     : type(_type)
     , name(_name)
-    , coordinates(_coordList)
-    , ppcCoordinates(_coordList) { }
+    , world_coordinates(_coordList)
+    { }
 
     virtual ~Geometry() {};
 
@@ -33,13 +33,13 @@ public:
         double xSum = 0.0;
         double ySum = 0.0;
 
-        for(auto coordinate : coordinates) {
+        for(auto coordinate : world_coordinates) {
             xSum += coordinate->getX();
             ySum += coordinate->getY();
         }
 
-        auto Cx = xSum / coordinates.size();
-        auto Cy = ySum / coordinates.size();
+        auto Cx = xSum / world_coordinates.size();
+        auto Cy = ySum / world_coordinates.size();
 
         return Coordinate(Cx, Cy);
     }
@@ -47,7 +47,7 @@ public:
     void translate(float dx, float dy) {
         auto T_matrix = Transformation::TranslateMatrix(dx, dy);
 
-        for(auto coordinate : ppcCoordinates) {
+        for(auto coordinate : world_coordinates) {
             coordinate->transform(T_matrix);
         }
     }
@@ -61,7 +61,7 @@ public:
 
         auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, S_matrix), T_matrix2);
 
-        for(auto coordinate : ppcCoordinates) {
+        for(auto coordinate : world_coordinates) {
             coordinate->transform(result);
         }
     }
@@ -75,7 +75,7 @@ public:
 
         auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, R_matrix), T_matrix2);
 
-        for(auto coordinate : ppcCoordinates) {
+        for(auto coordinate : world_coordinates) {
             coordinate->transform(result);
         }
     }

@@ -33,7 +33,7 @@ public:
 
         std::list<Coordinate> transformedCoordinates;
         for(auto geometry : window->displayFile) {
-            for(auto coordinate : geometry->ppcCoordinates) {
+            for(auto coordinate : geometry->world_coordinates) {
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }
             draw(geometry->type, &transformedCoordinates);

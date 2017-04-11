@@ -214,28 +214,28 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_zoom_in_clicked_cb(GtkWidget *button) {
-        window->zoom(0.85);
+        window->zoom(0.85, 0.85);
         viewPort->redraw();
 
         UI::write_status("zoom in");
     }
 
     void on_btn_zoom_out_clicked_cb(GtkWidget *button) {
-        window->zoom(1.15);
+        window->zoom(1.15, 1.15);
         viewPort->redraw();
 
         UI::write_status("zoom out");
     }
 
     void on_btn_rotate_left_clicked(GtkWidget *button) {
-        window->rotate(-45);
+        // window->rotate(-45);
         viewPort->redraw();
 
         UI::write_status("rotate window left");
     }
 
     void on_btn_rotate_right_clicked(GtkWidget *button) {
-        window->rotate(45);
+        // window->rotate(45);
         viewPort->redraw();
 
         UI::write_status("rotate window right");

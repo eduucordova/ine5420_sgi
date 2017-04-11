@@ -12,109 +12,59 @@
 
 class Window {
 public:
-    Window(const Coordinate &_Wmin, const Coordinate &_Wmax)
-    : Wmin(_Wmin)
-    , Wmax(_Wmax)
-    , angle(0)
+    Window(const Coordinate &_world_min, const Coordinate &_world_max)
+    : world_min(_world_min)
+    , world_max(_world_max)
     {
-        W1.setX(Wmin.getX());
-        W1.setY(Wmax.getY());
-        W2.setX(Wmax.getX());
-        W2.setY(Wmin.getY());
-
-        GeneratePPC();
     }
 
     ~Window() { }
 
     void moveUp(int steps)
     {
-        Wmax.updateY(steps);
-        Wmin.updateY(steps);
-        W1.updateY(steps);
-        W2.updateY(steps);
+        auto T_matrix = Transformation::TranslateMatrix(0, steps);
 
-        PPCmax.updateY(steps);
-        PPCmin.updateY(steps);
-        PPCw1.updateY(steps);
-        PPCw2.updateY(steps);
+        world_max.transform(T_matrix);
+        world_min.transform(T_matrix);
     }
 
     void moveDown(int steps)
     {
-        Wmax.updateY(-1 * steps);
-        Wmin.updateY(-1 * steps);
-        W1.updateY(-1 * steps);
-        W2.updateY(-1 * steps);
+        auto T_matrix = Transformation::TranslateMatrix(0, steps * -1);
 
-        PPCmax.updateY(-1 * steps);
-        PPCmin.updateY(-1 * steps);
-        PPCw1.updateY(-1 * steps);
-        PPCw2.updateY(-1 * steps);
+        world_max.transform(T_matrix);
+        world_min.transform(T_matrix);
     }
 
     void moveLeft(int steps)
     {
-        Wmax.updateX(-1 * steps);
-        Wmin.updateX(-1 * steps);
-        W1.updateX(-1 * steps);
-        W2.updateX(-1 * steps);
 
-        PPCmax.updateX(-1 * steps);
-        PPCmin.updateX(-1 * steps);
-        PPCw1.updateX(-1 * steps);
-        PPCw2.updateX(-1 * steps);
+        auto T_matrix = Transformation::TranslateMatrix(steps * -1, 0);
+
+        world_max.transform(T_matrix);
+        world_min.transform(T_matrix);
     }
 
     void moveRight(int steps)
     {
-        Wmax.updateX(steps);
-        Wmin.updateX(steps);
-        W1.updateX(steps);
-        W2.updateX(steps);
+        auto T_matrix = Transformation::TranslateMatrix(steps, 0);
 
-        PPCmax.updateX(steps);
-        PPCmin.updateX(steps);
-        PPCw1.updateX(steps);
-        PPCw2.updateX(steps);
+        world_max.transform(T_matrix);
+        world_min.transform(T_matrix);
     }
 
-    void zoom(double size)
+    void zoom(double Sx, double Sy)
     {
-        Wmax.updateX(size);
-        Wmax.updateY(size);
-        Wmin.updateX(size);
-        Wmin.updateY(size);
-        W1.updateX(size);
-        W1.updateY(size);
-        W2.updateX(size);
-        W2.updateY(size);
-
-        PPCmax.updateX(size);
-        PPCmax.updateY(size);
-        PPCmin.updateX(size);
-        PPCmin.updateY(size);
-        PPCw1.updateX(size);
-        PPCw1.updateY(size);
-        PPCw2.updateX(size);
-        PPCw2.updateY(size);
-    }
-
-    void rotate(float _angle) {
         Coordinate center = GetWindowCenter();
 
         auto T_matrix1 = Transformation::TranslateMatrix(center.getX() * -1, center.getY() * -1);
-        auto R_matrix = Transformation::RotateMatrix(_angle);
+        auto S_matrix = Transformation::ScalingMatrix(Sx, Sy);
         auto T_matrix2 = Transformation::TranslateMatrix(center.getX(), center.getY());
 
-        auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, R_matrix), T_matrix2);
+        auto R_matrix = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, S_matrix), T_matrix2);
 
-        Wmax.transform(result);
-        Wmin.transform(result);
-        W1.transform(result);
-        W2.transform(result);
-
-        GeneratePPC();
+        world_max.transform(R_matrix);
+        world_min.transform(R_matrix);
     }
 
     string AddPoint(std::list<Coordinate*> coordinates) {
@@ -143,20 +93,20 @@ public:
 
     Coordinate *getMinPoint()
     {
-        return &PPCmin;
+        return &world_min;
     }
 
     Coordinate *getMaxPoint()
     {
-        return &PPCmax;
+        return &world_max;
     }
 
-    double WindowWidth() {
-        return sqrt(pow((W2.getX() - PPCmin.getX()), 2) + pow((W2.getY() - PPCmin.getY()), 2));
+    double WindowWidth(){
+        return world_max.getX() - world_min.getX();
     }
 
-    double WindowHeight() {
-        return sqrt(pow(W1.getX() - PPCmin.getX(), 2) + pow(W1.getY() - PPCmin.getY(), 2));
+    double WindowHeight(){
+        return world_max.getY() - world_min.getY();
     }
 
     std::list<Geometry *> displayFile;
@@ -164,79 +114,23 @@ private:
     int pointCount = 1;
     int lineCount = 1;
     int polygonCount = 1;
-    Coordinate W1 = Coordinate(0,0);
-    Coordinate W2 = Coordinate(0,0);
-    Coordinate Vu = Coordinate(0,0);
-    Coordinate PPCmin = Coordinate(0,0);
-    Coordinate PPCmax = Coordinate(0,0);
-    Coordinate PPCw1 = Coordinate(0,0);
-    Coordinate PPCw2 = Coordinate(0,0);
-    Coordinate Wmin, Wmax;
-    float angle;
+    Coordinate world_min, world_max;
+    Coordinate window_min = Coordinate(-1, -1);
 
     const Coordinate GetWindowCenter() {
         double xSum = 0.0;
         double ySum = 0.0;
 
-        xSum += Wmax.getX();
-        ySum += Wmax.getY();
-        xSum += Wmin.getX();
-        ySum += Wmin.getY();
-        xSum += W1.getX();
-        ySum += W1.getY();
-        xSum += W2.getX();
-        ySum += W2.getY();
+        xSum += world_max.getX();
+        ySum += world_max.getY();
+        xSum += world_min.getX();
+        ySum += world_min.getY();
 
-        auto Cx = xSum / 4;
-        auto Cy = ySum / 4;
+        auto Cx = xSum / 2;
+        auto Cy = ySum / 2;
 
         return Coordinate(Cx, Cy);
-    }
-
-    void GeneratePPC() {
-        Coordinate center = GetWindowCenter();
-
-        // auto T_matrix = Transformation::TranslateMatrix(center.getX() * -1, center.getY() * -1);
-
-        Vu.setX(W1.getX() - Wmin.getX());
-        Vu.setY(W1.getY() - Wmin.getY());
-
-        angle = Vu.angle();
-
-        if (angle < 0)
-            angle += 360;
-
-        // auto R_matrix = Transformation::RotateMatrix(-1*angle);
-        
-        // auto result = Transformation::matrixProduct(T_matrix, R_matrix);
-
-        auto T_matrix1 = Transformation::TranslateMatrix(center.getX() * -1, center.getY() * -1);
-        auto R_matrix = Transformation::RotateMatrix(-1*angle);
-        auto T_matrix2 = Transformation::TranslateMatrix(center.getX(), center.getY());
-
-        auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, R_matrix), T_matrix2);
-
-        PPCmax = Wmax;
-        PPCmin = Wmin;
-        PPCw1 = W1;
-        PPCw2 = W2;
-
-        Wmax.transform(result);
-        Wmin.transform(result);
-        W1.transform(result);
-        W2.transform(result);
-
-        PPCmax.transform(result);
-        PPCmin.transform(result);
-        PPCw1.transform(result);
-        PPCw2.transform(result);
-
-        for(auto geometry : displayFile) {
-            for(auto coordinate : geometry->ppcCoordinates) {
-                coordinate->transform(result);
-            }
-        }
-    }
+}
 };
 
 #endif /* end of include guard: WINDOW_HPP_ */
