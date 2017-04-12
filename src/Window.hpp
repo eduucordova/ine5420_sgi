@@ -75,6 +75,35 @@ public:
         }
     }
 
+    void clip() {
+        clippedDisplayFile.clear();
+        for (auto geometry : displayFile) {
+            switch (geometry->type) {
+                case geometries::point:
+                {
+                    Point *point = dynamic_cast<Point*>(geometry);
+                    if (point->clip(getMinPoint(), getMaxPoint()))
+                        clippedDisplayFile.push_back(geometry);
+                }
+                break;
+                case geometries::line:
+                {
+                    Line *line = dynamic_cast<Line*>(geometry);
+                    if (line->clip(getMinPoint(), getMaxPoint()))
+                        clippedDisplayFile.push_back(geometry);
+                }
+                break;
+                case geometries::polygon:
+                {
+                    Polygon *polygon = dynamic_cast<Polygon*>(geometry);
+                    if (polygon->clip(getMinPoint(), getMaxPoint()))
+                        clippedDisplayFile.push_back(geometry);
+                }
+                break;
+            }
+        }
+    }
+
     string AddPoint(std::list<Coordinate*> coordinates) {
         string name = "point_" + std::to_string(pointCount++);
         Geometry *point = new Point(geometries::point, name, coordinates);
@@ -118,6 +147,8 @@ public:
     }
 
     std::list<Geometry *> displayFile;
+    std::list<Geometry *> clippedDisplayFile;
+
 private:
     int pointCount = 1;
     int lineCount = 1;

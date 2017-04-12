@@ -13,9 +13,17 @@ class Point : public Geometry {
 public:
     using Geometry::Geometry;
 
-// protected:
-//     string name;
-//     std::list<Coordinate *> *coordinates;
+    bool clip(Coordinate *_winMin, Coordinate *_winMax) {
+    	Coordinate *coordinate = world_coordinates.front();
+        window_coordinates.clear();
+    	auto x = coordinate->getX();
+    	auto y = coordinate->getY();
+    	if (x > (_winMin->getX() + 10) && x < (_winMax->getX() - 10) && y > (_winMin->getY() + 10) && y < (_winMax->getY() - 10)) {
+    		window_coordinates.push_back(coordinate);
+    		return true;
+    	}
+		return false;
+    }
 };
 
 #endif /* end of include guard: POINT_HPP_ */

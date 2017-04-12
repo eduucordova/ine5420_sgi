@@ -31,9 +31,11 @@ public:
         cairo_paint (cr);
         cairo_destroy (cr);
 
+        window->clip();
+
         std::list<Coordinate> transformedCoordinates;
-        for(auto geometry : window->displayFile) {
-            for(auto coordinate : geometry->world_coordinates) {
+        for(auto geometry : window->clippedDisplayFile) {
+            for(auto coordinate : geometry->window_coordinates) {
                 // world coordinate to window coordinate
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }

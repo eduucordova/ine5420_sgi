@@ -13,9 +13,9 @@ class Polygon : public Geometry {
 public:
     using Geometry::Geometry;
 
-// protected:
-//     string name;
-//     std::list<Coordinate *> *coordinates;
+	bool clip(Coordinate *_winMin, Coordinate *_winMax) {
+    	window_coordinates = world_coordinates;
+    }
 };
 
 #endif /* end of include guard: POLYGON_HPP_ */
