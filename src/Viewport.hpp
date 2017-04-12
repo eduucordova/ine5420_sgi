@@ -34,6 +34,7 @@ public:
         std::list<Coordinate> transformedCoordinates;
         for(auto geometry : window->displayFile) {
             for(auto coordinate : geometry->world_coordinates) {
+                // world coordinate to window coordinate
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }
             draw(geometry->type, &transformedCoordinates);

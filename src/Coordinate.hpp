@@ -74,15 +74,6 @@ class Coordinate {
         setY(newVec[1]);
     }
 
-    float angleBetweenY() {
-        float v = sqrt(pow(x, 2) + pow(y, 2)); // sqrt(x² + y²)
-        float u = sqrt(pow(0, 2) + pow(1, 2)); // Y axis
-
-        // cout << "[-1,1]" << (x*0 + y*1) / (v*u) << endl;
-
-        return (acos(max(min(((x*0 + y*1) / (v*u)), 1.0),-1.0)) * 180.0) / 3.14159265;
-    }
-
     double angle() 
     {
         double dot = x*0 + y*1;      // dot product

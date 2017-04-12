@@ -67,6 +67,14 @@ public:
         world_min.transform(R_matrix);
     }
 
+    void rotate(double _angle) {
+        Coordinate center = GetWindowCenter();
+
+        for (auto geometry : displayFile) {
+            geometry->rotate(&center, _angle * -1);
+        }
+    }
+
     string AddPoint(std::list<Coordinate*> coordinates) {
         string name = "point_" + std::to_string(pointCount++);
         Geometry *point = new Point(geometries::point, name, coordinates);
@@ -116,6 +124,8 @@ private:
     int polygonCount = 1;
     Coordinate world_min, world_max;
     Coordinate window_min = Coordinate(-1, -1);
+    Coordinate window_max = Coordinate(1, 1);
+    Coordinate v = Coordinate(0, 1);
 
     const Coordinate GetWindowCenter() {
         double xSum = 0.0;
@@ -130,7 +140,7 @@ private:
         auto Cy = ySum / 2;
 
         return Coordinate(Cx, Cy);
-}
+    }
 };
 
 #endif /* end of include guard: WINDOW_HPP_ */

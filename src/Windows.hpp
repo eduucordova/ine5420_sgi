@@ -228,14 +228,14 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_rotate_left_clicked(GtkWidget *button) {
-        // window->rotate(-45);
+        window->rotate(-45);
         viewPort->redraw();
 
         UI::write_status("rotate window left");
     }
 
     void on_btn_rotate_right_clicked(GtkWidget *button) {
-        // window->rotate(45);
+        window->rotate(45);
         viewPort->redraw();
 
         UI::write_status("rotate window right");

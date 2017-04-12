@@ -79,6 +79,18 @@ public:
             coordinate->transform(result);
         }
     }
+
+    void rotate(Coordinate * center, float angle) {
+        auto T_matrix1 = Transformation::TranslateMatrix(center->getX() * -1, center->getY() * -1);
+        auto R_matrix = Transformation::RotateMatrix(angle);
+        auto T_matrix2 = Transformation::TranslateMatrix(center->getX(), center->getY());
+
+        auto result = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, R_matrix), T_matrix2);
+
+        for(auto coordinate : world_coordinates) {
+            coordinate->transform(result);
+        }
+    }
 };
 
 #endif /* end of include guard: GEOMETRY_HPP_ */
