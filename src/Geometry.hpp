@@ -30,8 +30,8 @@ public:
     virtual ~Geometry() {};
 
     const Coordinate GetObjectCenter() {
-        double xSum = 0.0;
-        double ySum = 0.0;
+        float xSum = 0.0;
+        float ySum = 0.0;
 
         for(auto coordinate : world_coordinates) {
             xSum += coordinate->getX();

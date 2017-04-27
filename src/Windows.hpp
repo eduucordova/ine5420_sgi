@@ -124,13 +124,29 @@ namespace UI {
 
     static void populateForDebug() {
             std::list<Coordinate*> coordinates;
-            coordinates.push_back(new Coordinate(25, 25));
-            coordinates.push_back(new Coordinate(32, 76));
-            coordinates.push_back(new Coordinate(87, 69));
-            coordinates.push_back(new Coordinate(92, 32));
-            coordinates.push_back(new Coordinate(41, 46));
+            coordinates.push_back(new Coordinate(-10, 0));
+            coordinates.push_back(new Coordinate(-80, -80));
+            coordinates.push_back(new Coordinate(0, -10));
+            coordinates.push_back(new Coordinate(80, -80));
+            coordinates.push_back(new Coordinate(10, 0));
+            coordinates.push_back(new Coordinate(80, 80));
+            coordinates.push_back(new Coordinate(0, 10));
+            coordinates.push_back(new Coordinate(-80, 80));
+            coordinates.push_back(new Coordinate(-10, 0));
             
             string name = window->AddPolygon(coordinates);
+            store_figure(name);
+
+            coordinates.clear();
+            coordinates.push_back(new Coordinate(0, 100));
+            coordinates.push_back(new Coordinate(0, -100));
+            name = window->AddLine(coordinates);
+            store_figure(name);
+
+            coordinates.clear();
+            coordinates.push_back(new Coordinate(100, 0));
+            coordinates.push_back(new Coordinate(-100, 0));
+            name = window->AddLine(coordinates);
             store_figure(name);
     }
 
@@ -384,8 +400,8 @@ G_MODULE_EXPORT {
         if (!coordinates.empty())
             coordinates.clear();
 
-        double x = atof(gtk_entry_get_text(entry_ponto_x));
-        double y = atof(gtk_entry_get_text(entry_ponto_y));
+        float x = atof(gtk_entry_get_text(entry_ponto_x));
+        float y = atof(gtk_entry_get_text(entry_ponto_y));
 
         coordinates.push_back(new Coordinate(x, y));
 
@@ -407,10 +423,10 @@ G_MODULE_EXPORT {
         if (!coordinates.empty())
             coordinates.clear();
 
-        double x1 = atof(gtk_entry_get_text(entry_ponto_x1));
-        double y1 = atof(gtk_entry_get_text(entry_ponto_y1));
-        double x2 = atof(gtk_entry_get_text(entry_ponto_x2));
-        double y2 = atof(gtk_entry_get_text(entry_ponto_y2));
+        float x1 = atof(gtk_entry_get_text(entry_ponto_x1));
+        float y1 = atof(gtk_entry_get_text(entry_ponto_y1));
+        float x2 = atof(gtk_entry_get_text(entry_ponto_x2));
+        float y2 = atof(gtk_entry_get_text(entry_ponto_y2));
 
         coordinates.push_back(new Coordinate(x1, y1));
         coordinates.push_back(new Coordinate(x2, y2));
@@ -430,8 +446,8 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_coordenada_clicked() {
-        double x3 = atof(gtk_entry_get_text(entry_ponto_x3));
-        double y3 = atof(gtk_entry_get_text(entry_ponto_y3));
+        float x3 = atof(gtk_entry_get_text(entry_ponto_x3));
+        float y3 = atof(gtk_entry_get_text(entry_ponto_y3));
 
         Coordinate *temp = new Coordinate(x3, y3);
         UI::store_coordinate(temp);

@@ -14,30 +14,30 @@ using namespace std;
 
 class Coordinate {
     private:
-    double x;
-    double y;
+    float x;
+    float y;
 
     public:
-    Coordinate(double _x, double _y) {
+    Coordinate(float _x, float _y) {
         x = _x;
         y = _y;
     }
 
     ~Coordinate() {}
 
-    double getX() {
+    float getX() {
         return x;
     }
 
-    double getY() {
+    float getY() {
         return y;
     }
 
-    void setX(double _x) {
+    void setX(float _x) {
         x = _x;
     }
 
-    void setY(double _y) {
+    void setY(float _y) {
         y = _y;
     }
 
@@ -49,18 +49,18 @@ class Coordinate {
         y += _y;
     }
 
-    void updateX(double _x) {
+    void updateX(float _x) {
         x *= _x;
     }
 
-    void updateY(double _y) {
+    void updateY(float _y) {
         y *= _y;
     }
 
     void transform(const std::vector<std::vector<float>>& _matrix)
     {
-        std::vector<double> _vector = { x, y, 1 };
-        std::vector<double> newVec = { 0, 0, 0 };
+        std::vector<float> _vector = { x, y, 1 };
+        std::vector<float> newVec = { 0, 0, 0 };
 
         for (std::size_t i = 0; i < _matrix.size(); ++i)
         {
@@ -74,11 +74,11 @@ class Coordinate {
         setY(newVec[1]);
     }
 
-    double angle() 
+    float angle() 
     {
-        double dot = x*0 + y*1;      // dot product
-        double det = x*1 - y*0;      // determinant
-        double angle = atan2(det, dot);  // atan2(y, x) or atan2(sin, cos)
+        float dot = x*0 + y*1;      // dot product
+        float det = x*1 - y*0;      // determinant
+        float angle = atan2(det, dot);  // atan2(y, x) or atan2(sin, cos)
 
         return angle * 180.0 / PI;
     }

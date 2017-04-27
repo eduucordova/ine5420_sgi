@@ -36,7 +36,6 @@ public:
         std::list<Coordinate> transformedCoordinates;
         for(auto geometry : window->clippedDisplayFile) {
             for(auto coordinate : geometry->window_coordinates) {
-                // world coordinate to window coordinate
                 transformedCoordinates.push_back(windowToViewport(coordinate));
             }
             draw(geometry->type, &transformedCoordinates);
@@ -61,9 +60,7 @@ public:
             default:
                 std::list<Coordinate>::iterator nextCoord;
                 for (std::list<Coordinate>::iterator it = coordinates->begin(); it != coordinates->end(); it++) {
-                    if (std::next(it, 1) == coordinates->end())
-                        nextCoord = coordinates->begin();
-                    else
+                    if (!(std::next(it, 1) == coordinates->end()))
                         nextCoord = std::next(it, 1);
 
                     cairo_move_to(cr, (it)->getX(), (it)->getY());

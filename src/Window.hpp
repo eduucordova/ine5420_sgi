@@ -53,7 +53,7 @@ public:
         world_min.transform(T_matrix);
     }
 
-    void zoom(double Sx, double Sy)
+    void zoom(float Sx, float Sy)
     {
         Coordinate center = GetWindowCenter();
 
@@ -67,7 +67,7 @@ public:
         world_min.transform(R_matrix);
     }
 
-    void rotate(double _angle) {
+    void rotate(float _angle) {
         Coordinate center = GetWindowCenter();
 
         for (auto geometry : displayFile) {
@@ -138,11 +138,11 @@ public:
         return &world_max;
     }
 
-    double WindowWidth(){
+    float WindowWidth(){
         return world_max.getX() - world_min.getX();
     }
 
-    double WindowHeight(){
+    float WindowHeight(){
         return world_max.getY() - world_min.getY();
     }
 
@@ -159,8 +159,8 @@ private:
     Coordinate v = Coordinate(0, 1);
 
     const Coordinate GetWindowCenter() {
-        double xSum = 0.0;
-        double ySum = 0.0;
+        float xSum = 0.0;
+        float ySum = 0.0;
 
         xSum += world_max.getX();
         ySum += world_max.getY();
