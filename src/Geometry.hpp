@@ -12,7 +12,7 @@
 
 struct geometries
 {
-    enum Type { point, line, polygon };
+    enum Type { point, line, polygon, curve };
 };
 class Geometry {
 public:

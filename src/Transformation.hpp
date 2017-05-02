@@ -60,6 +60,86 @@ namespace Transformation {
 
         return newVec;
     }
+
+    std::vector<std::vector<float>> matrixProduct4x1(
+        const std::vector<std::vector<float>>& A_matrix,
+        const std::vector<std::vector<float>>& B_matrix)
+    {
+        std::vector<std::vector<float>> newVec = { { 0 },
+                                                   { 0 },
+                                                   { 0 },
+                                                   { 0 } };
+
+        for (std::size_t i = 0; i < A_matrix.size(); i++)
+        {
+            for (std::size_t j = 0; j < B_matrix[i].size(); j++)
+            {
+                for(std::size_t k = 0; k < A_matrix.size(); k++)
+                {
+                    // cout << A_matrix[i][k] << " * " << B_matrix[k][j] << endl;
+                    newVec[i][j] += A_matrix[i][k] * B_matrix[k][j];
+                }
+            }
+        }
+
+        return newVec;
+    }
+
+    std::vector<std::vector<float>> matrixProduct4x2(
+        const std::vector<std::vector<float>>& A_matrix,
+        const std::vector<std::vector<float>>& B_matrix)
+    {
+        std::vector<std::vector<float>> newVec = { { 0, 0 },
+                                                   { 0, 0 },
+                                                   { 0, 0 },
+                                                   { 0, 0 } };
+
+        for (std::size_t i = 0; i < A_matrix.size(); ++i)
+        {
+            for (std::size_t j = 0; j < B_matrix[i].size(); ++j)
+            {
+                for(std::size_t k = 0; k < A_matrix.size(); ++k)
+                {
+                    newVec[i][j] += A_matrix[i][k] * B_matrix[k][j];
+                }
+            }
+        }
+
+        return newVec;
+    }
+
+    std::vector<std::vector<float>> matrixProduct4x4(
+        const std::vector<std::vector<float>>& A_matrix,
+        const std::vector<std::vector<float>>& B_matrix)
+    {
+        std::vector<std::vector<float>> newVec = { { 0,0,0,0 },
+                                                   { 0,0,0,0 },
+                                                   { 0,0,0,0 },
+                                                   { 0,0,0,0 } };
+
+        for (std::size_t i = 0; i < A_matrix.size(); ++i)
+        {
+            for (std::size_t j = 0; j < B_matrix[i].size(); ++j)
+            {
+                for(std::size_t k = 0; k < A_matrix.size(); ++k)
+                {
+                    newVec[i][j] += A_matrix[i][k] * B_matrix[k][j];
+                }
+            }
+        }
+
+        return newVec;
+    }
+
+    int printMatrix(const std::vector<std::vector<float>>& matrix) {
+        for (std::size_t i = 0; i < matrix.size(); i++) {
+            for (std::size_t j = 0; j < matrix[i].size(); j++) {
+                cout << matrix[i][j] << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
 }
 
 #endif /* end of include guard: TRANSFORMATION_HPP_ */

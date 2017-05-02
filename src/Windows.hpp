@@ -54,6 +54,10 @@ namespace UI {
             polygon_coordinates = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "polygon_coordinates"));
             initCoordinteList();
 
+            tree_curve_coordinates = GTK_TREE_VIEW(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "tree_curve_coordinates"));
+            curve_coordinates = GTK_LIST_STORE(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "curve_coordinates"));
+            initCurveCoordinteList();
+
             g_signal_connect (drawing_area, "draw", G_CALLBACK (redraw), NULL);
             g_signal_connect (drawing_area,"configure-event", G_CALLBACK (create_surface), NULL);
 
@@ -98,6 +102,20 @@ namespace UI {
 
             gtk_tree_view_set_model (tree_polygon_coordinates, GTK_TREE_MODEL (polygon_coordinates));
         }
+
+        void initCurveCoordinteList(){
+            GtkCellRenderer *renderer;
+           
+            renderer = gtk_cell_renderer_text_new ();
+
+            gtk_tree_view_insert_column_with_attributes (
+                tree_curve_coordinates, -1,      
+                "Coordinates", renderer,
+                "text", 0,
+                NULL);
+
+            gtk_tree_view_set_model (tree_curve_coordinates, GTK_TREE_MODEL (curve_coordinates));
+        }
     };
 
     class AddFigureWindow {
@@ -115,6 +133,8 @@ namespace UI {
             entry_ponto_y2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y2"));
             entry_ponto_x3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x3"));
             entry_ponto_y3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y3"));
+            entry_ponto_x4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x4"));
+            entry_ponto_y4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y4"));
 
             gtk_builder_connect_signals(gtkBuilder, NULL);
 
@@ -124,17 +144,16 @@ namespace UI {
 
     static void populateForDebug() {
             std::list<Coordinate*> coordinates;
-            coordinates.push_back(new Coordinate(-10, 0));
-            coordinates.push_back(new Coordinate(-80, -80));
-            coordinates.push_back(new Coordinate(0, -10));
-            coordinates.push_back(new Coordinate(80, -80));
-            coordinates.push_back(new Coordinate(10, 0));
-            coordinates.push_back(new Coordinate(80, 80));
-            coordinates.push_back(new Coordinate(0, 10));
-            coordinates.push_back(new Coordinate(-80, 80));
-            coordinates.push_back(new Coordinate(-10, 0));
+            string name = "";
+            coordinates.push_back(new Coordinate(0, -30));
+            coordinates.push_back(new Coordinate(30, -15));
+            coordinates.push_back(new Coordinate(30, 15));
+            coordinates.push_back(new Coordinate(0, 30));
+            coordinates.push_back(new Coordinate(-30, 15));
+            coordinates.push_back(new Coordinate(-30, -15));
+            coordinates.push_back(new Coordinate(0, -30));
             
-            string name = window->AddPolygon(coordinates);
+            name = window->AddPolygon(coordinates);
             store_figure(name);
 
             coordinates.clear();
@@ -147,6 +166,20 @@ namespace UI {
             coordinates.push_back(new Coordinate(100, 0));
             coordinates.push_back(new Coordinate(-100, 0));
             name = window->AddLine(coordinates);
+            store_figure(name);
+
+            coordinates.clear();
+            coordinates.push_back(new Coordinate(0, -30));
+            coordinates.push_back(new Coordinate(30, -15));
+            coordinates.push_back(new Coordinate(30, 15));
+            coordinates.push_back(new Coordinate(0, 30));
+            coordinates.push_back(new Coordinate(-30, 15));
+            coordinates.push_back(new Coordinate(-30, -15));
+            coordinates.push_back(new Coordinate(0, -30));
+            coordinates.push_back(new Coordinate(30, -15));
+            coordinates.push_back(new Coordinate(30, 15));
+            coordinates.push_back(new Coordinate(0, 30));
+            name = window->AddCurve(coordinates);
             store_figure(name);
     }
 
@@ -165,6 +198,16 @@ namespace UI {
         gtk_list_store_append (polygon_coordinates, &iterCoordList);
         gtk_list_store_set(
             polygon_coordinates, &iterCoordList, 
+            0, coord,
+            -1);
+    }
+
+    static void store_curve_coordinate(Coordinate *coordinate){
+        char coord[50];
+        sprintf(coord, "x: %f; y: %f", coordinate->getX(), coordinate->getY());
+        gtk_list_store_append (curve_coordinates, &iterCoordList);
+        gtk_list_store_set(
+            curve_coordinates, &iterCoordList, 
             0, coord,
             -1);
     }
@@ -464,6 +507,33 @@ G_MODULE_EXPORT {
 
         coordinates.clear();
         gtk_list_store_clear(polygon_coordinates);
+
+        gtk_widget_hide(window_add_figure);
+
+        UI::store_figure(name);
+
+        UI::write_status("drawing polygon");
+    }
+
+    void on_btn_add_curve_coordenada_clicked() {
+        float x4 = atof(gtk_entry_get_text(entry_ponto_x4));
+        float y4 = atof(gtk_entry_get_text(entry_ponto_y4));
+
+        Coordinate *temp = new Coordinate(x4, y4);
+        UI::store_curve_coordinate(temp);
+        coordinates.push_back(temp);
+
+        char str[255];
+        sprintf(str, "added coordinate at: %f; %f", x4, y4);
+        UI::write_status(str);
+    }
+
+    void on_btn_add_curve_clicked(){
+        string name = window->AddCurve(coordinates);
+        viewPort->redraw();
+
+        coordinates.clear();
+        gtk_list_store_clear(curve_coordinates);
 
         gtk_widget_hide(window_add_figure);
 

@@ -8,6 +8,7 @@
 #include "Point.hpp"
 #include "Line.hpp"
 #include "Polygon.hpp"
+#include "Bspline.hpp"
 #include "Coordinate.hpp"
 
 class Window {
@@ -100,6 +101,11 @@ public:
                         clippedDisplayFile.push_back(geometry);
                 }
                 break;
+                case geometries::curve:
+                {    
+                    clippedDisplayFile.push_back(geometry);
+                }
+                break;
             }
         }
     }
@@ -124,6 +130,15 @@ public:
         string name = "polygon_" + std::to_string(polygonCount++);
         Geometry *polygon = new Polygon(geometries::polygon, name, coordinates);
         displayFile.push_back(polygon);
+
+        return name;
+    }
+
+    string AddCurve(std::list<Coordinate*> coordinates) {
+        string name = "curve_" + std::to_string(curveCount++);
+        Geometry *curve = new Bspline(geometries::curve, name, coordinates);
+        dynamic_cast<Bspline*>(curve)->FowardDifferences();
+        displayFile.push_back(curve);
 
         return name;
     }
@@ -153,6 +168,7 @@ private:
     int pointCount = 1;
     int lineCount = 1;
     int polygonCount = 1;
+    int curveCount = 1;
     Coordinate world_min, world_max;
     Coordinate window_min = Coordinate(-1, -1);
     Coordinate window_max = Coordinate(1, 1);
