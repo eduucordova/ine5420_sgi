@@ -103,7 +103,9 @@ public:
                 break;
                 case geometries::curve:
                 {    
-                    clippedDisplayFile.push_back(geometry);
+                    Bspline *curve = dynamic_cast<Bspline*>(geometry);
+                    if (curve->clip(getMinPoint(), getMaxPoint()))
+                        clippedDisplayFile.push_back(geometry);
                 }
                 break;
             }
@@ -137,7 +139,7 @@ public:
     string AddCurve(std::list<Coordinate*> coordinates) {
         string name = "curve_" + std::to_string(curveCount++);
         Geometry *curve = new Bspline(geometries::curve, name, coordinates);
-        dynamic_cast<Bspline*>(curve)->FowardDifferences();
+        // dynamic_cast<Bspline*>(curve)->FowardDifferences();
         displayFile.push_back(curve);
 
         return name;

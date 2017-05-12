@@ -76,7 +76,6 @@ namespace Transformation {
             {
                 for(std::size_t k = 0; k < A_matrix.size(); k++)
                 {
-                    // cout << A_matrix[i][k] << " * " << B_matrix[k][j] << endl;
                     newVec[i][j] += A_matrix[i][k] * B_matrix[k][j];
                 }
             }
