@@ -40,7 +40,7 @@ private:
         return retorno;
     }
 
-    bool LiangBarsky(Coordinate *p0, Coordinate *p1) {
+    bool LiangBarsky(Coordinate3D *p0, Coordinate3D *p1) {
         float x0 = p0->getX();
         float y0 = p0->getY();
         float x1 = p1->getX();

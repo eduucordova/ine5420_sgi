@@ -10,7 +10,7 @@ public:
     using Geometry::Geometry;
 
     bool clip(Coordinate *_winMin, Coordinate *_winMax) {
-    	Coordinate *coordinate = world_coordinates.front();
+    	Coordinate3D *coordinate = world_coordinates.front();
         window_coordinates.clear();
 
         _minPoint->setX(_winMin->getX() + 10);
@@ -22,7 +22,7 @@ public:
     	auto y = coordinate->getY();
 
     	if (x > _minPoint->getX() && x < _maxPoint->getX() && y > _minPoint->getY() && y < _maxPoint->getY()) {
-    		window_coordinates.push_back(coordinate);
+    		window_coordinates.push_back(new Coordinate(x, y));
     		return true;
     	}
 		return false;

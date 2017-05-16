@@ -10,6 +10,7 @@
 #include "Polygon.hpp"
 #include "Bspline.hpp"
 #include "Coordinate.hpp"
+#include "Coordinate3D.hpp"
 
 class Window {
 public:
@@ -112,7 +113,7 @@ public:
         }
     }
 
-    string AddPoint(std::list<Coordinate*> coordinates) {
+    string AddPoint(std::list<Coordinate3D*> coordinates) {
         string name = "point_" + std::to_string(pointCount++);
         Geometry *point = new Point(geometries::point, name, coordinates);
         displayFile.push_back(point);
@@ -120,7 +121,7 @@ public:
         return name;
     }
 
-    string AddLine(std::list<Coordinate*> coordinates) {
+    string AddLine(std::list<Coordinate3D*> coordinates) {
         string name = "line_" + std::to_string(lineCount++);
         Geometry *line = new Line(geometries::line, name, coordinates);
         displayFile.push_back(line);
@@ -128,7 +129,7 @@ public:
         return name;
     }
 
-    string AddPolygon(std::list<Coordinate*> coordinates) {
+    string AddPolygon(std::list<Coordinate3D*> coordinates) {
         string name = "polygon_" + std::to_string(polygonCount++);
         Geometry *polygon = new Polygon(geometries::polygon, name, coordinates);
         displayFile.push_back(polygon);
@@ -136,7 +137,7 @@ public:
         return name;
     }
 
-    string AddCurve(std::list<Coordinate*> coordinates) {
+    string AddCurve(std::list<Coordinate3D*> coordinates) {
         string name = "curve_" + std::to_string(curveCount++);
         Geometry *curve = new Bspline(geometries::curve, name, coordinates);
         // dynamic_cast<Bspline*>(curve)->FowardDifferences();

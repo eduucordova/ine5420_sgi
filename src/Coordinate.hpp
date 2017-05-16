@@ -10,8 +10,6 @@ using namespace std;
 #include <vector>
 #include <cmath>
 
-#define PI 3.14159265;
-
 class Coordinate {
     private:
     float x;
@@ -72,15 +70,6 @@ class Coordinate {
 
         setX(newVec[0]);
         setY(newVec[1]);
-    }
-
-    float angle() 
-    {
-        float dot = x*0 + y*1;      // dot product
-        float det = x*1 - y*0;      // determinant
-        float angle = atan2(det, dot);  // atan2(y, x) or atan2(sin, cos)
-
-        return angle * 180.0 / PI;
     }
 };
 

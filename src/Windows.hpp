@@ -24,7 +24,7 @@ GtkTreeIter iterCoordList;
 GtkTreeSelection * object_selection;
 Geometry *selected_object;
 
-std::list<Coordinate*> coordinates;
+std::list<Coordinate3D*> coordinates;
 
 namespace UI {
 
@@ -145,40 +145,40 @@ namespace UI {
     static void populateForDebug() {
             std::list<Coordinate*> coordinates;
             string name = "";
-            coordinates.push_back(new Coordinate(0, -30));
-            coordinates.push_back(new Coordinate(30, -15));
-            coordinates.push_back(new Coordinate(30, 15));
-            coordinates.push_back(new Coordinate(0, 30));
-            coordinates.push_back(new Coordinate(-30, 15));
-            coordinates.push_back(new Coordinate(-30, -15));
-            coordinates.push_back(new Coordinate(0, -30));
+            coordinates.push_back(new Coordinate( 0, -30, 0));
+            coordinates.push_back(new Coordinate( 30,-15, 0));
+            coordinates.push_back(new Coordinate( 30, 15, 0));
+            coordinates.push_back(new Coordinate( 0,  30, 0));
+            coordinates.push_back(new Coordinate(-30, 15, 0));
+            coordinates.push_back(new Coordinate(-30,-15, 0));
+            coordinates.push_back(new Coordinate( 0, -30, 0));
             
             name = window->AddPolygon(coordinates);
             store_figure(name);
 
             coordinates.clear();
-            coordinates.push_back(new Coordinate(0, 100));
-            coordinates.push_back(new Coordinate(0, -100));
+            coordinates.push_back(new Coordinate(0,  100, 0));
+            coordinates.push_back(new Coordinate(0, -100, 0));
             name = window->AddLine(coordinates);
             store_figure(name);
 
             coordinates.clear();
-            coordinates.push_back(new Coordinate(100, 0));
-            coordinates.push_back(new Coordinate(-100, 0));
+            coordinates.push_back(new Coordinate( 100, 0, 0));
+            coordinates.push_back(new Coordinate(-100, 0, 0));
             name = window->AddLine(coordinates);
             store_figure(name);
 
             coordinates.clear();
-            coordinates.push_back(new Coordinate(0, -30));
-            coordinates.push_back(new Coordinate(30, -15));
-            coordinates.push_back(new Coordinate(30, 15));
-            coordinates.push_back(new Coordinate(0, 30));
-            coordinates.push_back(new Coordinate(-30, 15));
-            coordinates.push_back(new Coordinate(-30, -15));
-            coordinates.push_back(new Coordinate(0, -30));
-            coordinates.push_back(new Coordinate(30, -15));
-            coordinates.push_back(new Coordinate(30, 15));
-            coordinates.push_back(new Coordinate(0, 30));
+            coordinates.push_back(new Coordinate(  0, -30, 0));
+            coordinates.push_back(new Coordinate( 30, -15, 0));
+            coordinates.push_back(new Coordinate( 30,  15, 0));
+            coordinates.push_back(new Coordinate(  0,  30, 0));
+            coordinates.push_back(new Coordinate(-30,  15, 0));
+            coordinates.push_back(new Coordinate(-30, -15, 0));
+            coordinates.push_back(new Coordinate(  0, -30, 0));
+            coordinates.push_back(new Coordinate( 30, -15, 0));
+            coordinates.push_back(new Coordinate( 30,  15, 0));
+            coordinates.push_back(new Coordinate(  0,  30, 0));
             name = window->AddCurve(coordinates);
             store_figure(name);
     }
@@ -192,7 +192,7 @@ namespace UI {
             -1);
     }
 
-    static void store_coordinate(Coordinate *coordinate){
+    static void store_coordinate(Coordinate3D *coordinate){
         char coord[50];
         sprintf(coord, "x: %f; y: %f", coordinate->getX(), coordinate->getY());
         gtk_list_store_append (polygon_coordinates, &iterCoordList);
@@ -202,7 +202,7 @@ namespace UI {
             -1);
     }
 
-    static void store_curve_coordinate(Coordinate *coordinate){
+    static void store_curve_coordinate(Coordinate3D *coordinate){
         char coord[50];
         sprintf(coord, "x: %f; y: %f", coordinate->getX(), coordinate->getY());
         gtk_list_store_append (curve_coordinates, &iterCoordList);
@@ -314,7 +314,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->scaling(0.9, 0.9);
+            selected_object->scaling(0.9, 0.9, 0.9);
             viewPort->redraw();
 
             char str[255];
@@ -329,7 +329,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->scaling(1.1, 1.1);
+            selected_object->scaling(1.1, 1.1, 1.1);
             viewPort->redraw();
 
             char str[255];
@@ -344,7 +344,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->translate(0, 5);
+            selected_object->translate(0, 5, 0);
             viewPort->redraw();
 
             char str[255];
@@ -359,7 +359,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->translate(5, 0);
+            selected_object->translate(5, 0, 0);
             viewPort->redraw();
 
             char str[255];
@@ -374,7 +374,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->translate(-5, 0);
+            selected_object->translate(-5, 0, 0);
             viewPort->redraw();
 
             char str[255];
@@ -389,7 +389,7 @@ G_MODULE_EXPORT {
     {
         if(UI::get_selected_object()) {
 
-            selected_object->translate(0, -5);
+            selected_object->translate(0, -5, 0);
             viewPort->redraw();
 
             char str[255];
@@ -446,7 +446,7 @@ G_MODULE_EXPORT {
         float x = atof(gtk_entry_get_text(entry_ponto_x));
         float y = atof(gtk_entry_get_text(entry_ponto_y));
 
-        coordinates.push_back(new Coordinate(x, y));
+        coordinates.push_back(new Coordinate3D(x, y, z));
 
         string name = window->AddPoint(coordinates);
         viewPort->redraw();
@@ -471,8 +471,8 @@ G_MODULE_EXPORT {
         float x2 = atof(gtk_entry_get_text(entry_ponto_x2));
         float y2 = atof(gtk_entry_get_text(entry_ponto_y2));
 
-        coordinates.push_back(new Coordinate(x1, y1));
-        coordinates.push_back(new Coordinate(x2, y2));
+        coordinates.push_back(new Coordinate3D(x1, y1, z1));
+        coordinates.push_back(new Coordinate3D(x2, y2, z2));
 
         string name = window->AddLine(coordinates);
         viewPort->redraw();
@@ -492,7 +492,7 @@ G_MODULE_EXPORT {
         float x3 = atof(gtk_entry_get_text(entry_ponto_x3));
         float y3 = atof(gtk_entry_get_text(entry_ponto_y3));
 
-        Coordinate *temp = new Coordinate(x3, y3);
+        Coordinate3D *temp = new Coordinate3D(x3, y3, z3);
         UI::store_coordinate(temp);
         coordinates.push_back(temp);
 
@@ -519,7 +519,7 @@ G_MODULE_EXPORT {
         float x4 = atof(gtk_entry_get_text(entry_ponto_x4));
         float y4 = atof(gtk_entry_get_text(entry_ponto_y4));
 
-        Coordinate *temp = new Coordinate(x4, y4);
+        Coordinate3D *temp = new Coordinate(x4, y4, z4);
         UI::store_curve_coordinate(temp);
         coordinates.push_back(temp);
 

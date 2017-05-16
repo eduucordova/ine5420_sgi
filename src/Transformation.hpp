@@ -39,13 +39,74 @@ namespace Transformation {
         return rotateMatrix;
     }
 
+    std::vector<std::vector<float>> TranslateMatrix3D(float dx, float dy, float dz)
+    {
+        std::vector<std::vector<float>> translateMatrix = { {  1,  0,  0,  0 },
+                                                            {  0,  1,  0,  0 },
+                                                            {  0,  0,  1,  0 },
+                                                            { dx, dy, dz,  1 } };
+
+       return translateMatrix;
+    }
+
+    std::vector<std::vector<float>> ScalingMatrix3D(float sx, float sy, float sz)
+    {
+        std::vector<std::vector<float>> scalingMatrix = { { sx,  0, 0,  0 },
+                                                          {  0, sy, 0,  0 },
+                                                          {  0,  0, sz, 0},
+                                                          {  0,  0,  0, 1 } };
+
+        return scalingMatrix;
+    }
+
+    std::vector<std::vector<float>> RotateMatrix3Dx(float cosx, float sinx)
+    {
+        float _cos = cos(cosx);
+        float _sin = sin(sinx);
+
+        std::vector<std::vector<float>> rotateMatrix = { { 1,    0,     0, 0 },
+                                                         { 0,  _cos, _sin, 0 },
+                                                         { 0, -_sin, _cos, 0 },
+                                                         { 0,     0,    0, 1 } };
+
+        return rotateMatrix;
+    }
+
+    std::vector<std::vector<float>> RotateMatrix3Dy(float cosz, float sinz)
+    {
+        float _cos = cos(cosz);
+        float _sin = sin(sinz);
+
+        std::vector<std::vector<float>> rotateMatrix = { { _cos, 0, -_sin, 0 },
+                                                         {    0, 1,     0, 0 },
+                                                         { _sin, 0,  _cos, 0 },
+                                                         {    0, 0,     0, 1 } };
+
+        return rotateMatrix;
+    }
+
+    std::vector<std::vector<float>> RotateMatrix3Dz(float angle)
+    {
+        float radiansAngle = angle * static_cast<float>(M_PI) / 180.f;
+        float _cos = cos(radiansAngle);
+        float _sin = sin(radiansAngle);
+
+        std::vector<std::vector<float>> rotateMatrix = { {  _cos, _sin, 0, 0 },
+                                                         { -_sin, _cos, 0, 0 },
+                                                         {     0,    0, 1, 0 },
+                                                         {     0,    0, 0, 1 } };;
+
+        return rotateMatrix;
+    }
+
     std::vector<std::vector<float>> matrixProduct(
         const std::vector<std::vector<float>>& A_matrix,
         const std::vector<std::vector<float>>& B_matrix)
     {
-        std::vector<std::vector<float>> newVec = { { 0, 0, 0 },
-                                                   { 0, 0, 0 },
-                                                   { 0, 0, 0 } };
+        std::vector<std::vector<float>> newVec = { { 0, 0, 0, 0 },
+                                                   { 0, 0, 0, 0 },
+                                                   { 0, 0, 0, 0 },
+                                                   { 0, 0, 0, 0 } };
 
         for (std::size_t i = 0; i < A_matrix.size(); ++i)
         {

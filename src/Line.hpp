@@ -32,7 +32,7 @@ private:
     const int BOTTOM = 4; // 0100
     const int TOP = 8;    // 1000
 
-    bool CohenSutherland(Coordinate *p0, Coordinate *p1) {
+    bool CohenSutherland(Coordinate3D *p0, Coordinate3D *p1) {
         float x0 = p0->getX();
         float y0 = p0->getY();
         float x1 = p1->getX();
@@ -100,7 +100,7 @@ private:
         return true;
     }
 
-    bool LiangBarsky(Coordinate *p0, Coordinate *p1) {
+    bool LiangBarsky(Coordinate3D *p0, Coordinate3D *p1) {
         float x0 = p0->getX();
         float y0 = p0->getY();
         float x1 = p1->getX();
