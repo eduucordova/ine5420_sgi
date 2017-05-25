@@ -59,11 +59,8 @@ namespace Transformation {
         return scalingMatrix;
     }
 
-    std::vector<std::vector<float>> RotateMatrix3Dx(float cosx, float sinx)
+    std::vector<std::vector<float>> RotateMatrix3Dx(float _cos, float _sin)
     {
-        float _cos = cos(cosx);
-        float _sin = sin(sinx);
-
         std::vector<std::vector<float>> rotateMatrix = { { 1,    0,     0, 0 },
                                                          { 0,  _cos, _sin, 0 },
                                                          { 0, -_sin, _cos, 0 },
@@ -72,11 +69,8 @@ namespace Transformation {
         return rotateMatrix;
     }
 
-    std::vector<std::vector<float>> RotateMatrix3Dy(float cosz, float sinz)
+    std::vector<std::vector<float>> RotateMatrix3Dy(float _cos, float _sin)
     {
-        float _cos = cos(cosz);
-        float _sin = sin(sinz);
-
         std::vector<std::vector<float>> rotateMatrix = { { _cos, 0, -_sin, 0 },
                                                          {    0, 1,     0, 0 },
                                                          { _sin, 0,  _cos, 0 },
@@ -99,14 +93,13 @@ namespace Transformation {
         return rotateMatrix;
     }
 
-    std::vector<std::vector<float>> matrixProduct(
+    std::vector<std::vector<float>> matrixProduct3x3(
         const std::vector<std::vector<float>>& A_matrix,
         const std::vector<std::vector<float>>& B_matrix)
     {
-        std::vector<std::vector<float>> newVec = { { 0, 0, 0, 0 },
-                                                   { 0, 0, 0, 0 },
-                                                   { 0, 0, 0, 0 },
-                                                   { 0, 0, 0, 0 } };
+        std::vector<std::vector<float>> newVec = { { 0, 0, 0 },
+                                                   { 0, 0, 0 },
+                                                   { 0, 0, 0 } };
 
         for (std::size_t i = 0; i < A_matrix.size(); ++i)
         {

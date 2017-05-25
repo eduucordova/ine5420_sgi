@@ -63,7 +63,7 @@ public:
         auto S_matrix = Transformation::ScalingMatrix(Sx, Sy);
         auto T_matrix2 = Transformation::TranslateMatrix(center.getX(), center.getY());
 
-        auto R_matrix = Transformation::matrixProduct(Transformation::matrixProduct(T_matrix1, S_matrix), T_matrix2);
+        auto R_matrix = Transformation::matrixProduct3x3(Transformation::matrixProduct3x3(T_matrix1, S_matrix), T_matrix2);
 
         world_max.transform(R_matrix);
         world_min.transform(R_matrix);
@@ -73,7 +73,7 @@ public:
         Coordinate center = GetWindowCenter();
 
         for (auto geometry : displayFile) {
-            geometry->rotate(&center, _angle * -1);
+            // geometry->rotate(&center, _angle * -1);
         }
     }
 
