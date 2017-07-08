@@ -14,7 +14,7 @@
 
 class Window {
 public:
-    Window(const Coordinate &_world_min, const Coordinate &_world_max)
+    Window(const Coordinate3D &_world_min, const Coordinate3D &_world_max)
     : world_min(_world_min)
     , world_max(_world_max)
     {
@@ -24,7 +24,7 @@ public:
 
     void moveUp(int steps)
     {
-        auto T_matrix = Transformation::TranslateMatrix(0, steps);
+        auto T_matrix = Transformation::TranslateMatrix3D(0, steps, 0);
 
         world_max.transform(T_matrix);
         world_min.transform(T_matrix);
@@ -32,7 +32,7 @@ public:
 
     void moveDown(int steps)
     {
-        auto T_matrix = Transformation::TranslateMatrix(0, steps * -1);
+        auto T_matrix = Transformation::TranslateMatrix3D(0, steps * -1, 0);
 
         world_max.transform(T_matrix);
         world_min.transform(T_matrix);
@@ -41,7 +41,7 @@ public:
     void moveLeft(int steps)
     {
 
-        auto T_matrix = Transformation::TranslateMatrix(steps * -1, 0);
+        auto T_matrix = Transformation::TranslateMatrix3D(steps * -1, 0, 0);
 
         world_max.transform(T_matrix);
         world_min.transform(T_matrix);
@@ -49,31 +49,31 @@ public:
 
     void moveRight(int steps)
     {
-        auto T_matrix = Transformation::TranslateMatrix(steps, 0);
+        auto T_matrix = Transformation::TranslateMatrix3D(steps, 0, 0);
 
         world_max.transform(T_matrix);
         world_min.transform(T_matrix);
     }
 
-    void zoom(float Sx, float Sy)
+    void zoom(float Sx, float Sy, float Sz)
     {
-        Coordinate center = GetWindowCenter();
+        Coordinate3D center = GetWindowCenter();
 
-        auto T_matrix1 = Transformation::TranslateMatrix(center.getX() * -1, center.getY() * -1);
-        auto S_matrix = Transformation::ScalingMatrix(Sx, Sy);
-        auto T_matrix2 = Transformation::TranslateMatrix(center.getX(), center.getY());
+        auto T_matrix1 = Transformation::TranslateMatrix3D(center.getX() * -1, center.getY() * -1, center.getZ() * -1);
+        auto S_matrix = Transformation::ScalingMatrix3D(Sx, Sy, Sz);
+        auto T_matrix2 = Transformation::TranslateMatrix3D(center.getX(), center.getY(), center.getZ());
 
-        auto R_matrix = Transformation::matrixProduct3x3(Transformation::matrixProduct3x3(T_matrix1, S_matrix), T_matrix2);
+        auto R_matrix = Transformation::matrixProduct4x4(Transformation::matrixProduct4x4(T_matrix1, S_matrix), T_matrix2);
 
         world_max.transform(R_matrix);
         world_min.transform(R_matrix);
     }
 
     void rotate(float _angle) {
-        Coordinate center = GetWindowCenter();
+        Coordinate3D center = GetWindowCenter();
 
         for (auto geometry : displayFile) {
-            // geometry->rotate(&center, _angle * -1);
+            geometry->rotate(_angle * -1, true);
         }
     }
 
@@ -140,18 +140,17 @@ public:
     string AddCurve(std::list<Coordinate3D*> coordinates) {
         string name = "curve_" + std::to_string(curveCount++);
         Geometry *curve = new Bspline(geometries::curve, name, coordinates);
-        // dynamic_cast<Bspline*>(curve)->FowardDifferences();
         displayFile.push_back(curve);
 
         return name;
     }
 
-    Coordinate *getMinPoint()
+    Coordinate3D *getMinPoint()
     {
         return &world_min;
     }
 
-    Coordinate *getMaxPoint()
+    Coordinate3D *getMaxPoint()
     {
         return &world_max;
     }
@@ -172,24 +171,26 @@ private:
     int lineCount = 1;
     int polygonCount = 1;
     int curveCount = 1;
-    Coordinate world_min, world_max;
-    Coordinate window_min = Coordinate(-1, -1);
-    Coordinate window_max = Coordinate(1, 1);
-    Coordinate v = Coordinate(0, 1);
+    Coordinate3D world_min, world_max;
+    Coordinate3D *vpn = new Coordinate3D(0.0f, 0.0f, 1.0f);
 
-    const Coordinate GetWindowCenter() {
+    const Coordinate3D GetWindowCenter() {
         float xSum = 0.0;
         float ySum = 0.0;
+        float zSum = 0.0;
 
         xSum += world_max.getX();
         ySum += world_max.getY();
+        zSum += world_max.getZ();
         xSum += world_min.getX();
         ySum += world_min.getY();
+        zSum += world_min.getZ();
 
         auto Cx = xSum / 2;
         auto Cy = ySum / 2;
+        auto Cz = zSum / 2;
 
-        return Coordinate(Cx, Cy);
+        return Coordinate3D(Cx, Cy, Cz);
     }
 };
 

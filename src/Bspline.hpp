@@ -39,7 +39,7 @@ public:
         }
     }
 
-    bool clip(Coordinate *_winMin, Coordinate *_winMax) {
+    bool clip(Coordinate3D *_winMin, Coordinate3D *_winMax) {
         _minPoint->setX(_winMin->getX() + 10);
         _maxPoint->setX(_winMax->getX() - 10);
         _minPoint->setY(_winMin->getY() + 10);

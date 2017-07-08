@@ -9,7 +9,7 @@ class Point : public Geometry {
 public:
     using Geometry::Geometry;
 
-    bool clip(Coordinate *_winMin, Coordinate *_winMax) {
+    bool clip(Coordinate3D *_winMin, Coordinate3D *_winMax) {
     	Coordinate3D *coordinate = world_coordinates.front();
         window_coordinates.clear();
 

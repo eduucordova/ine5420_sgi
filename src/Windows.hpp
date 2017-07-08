@@ -40,7 +40,7 @@ namespace UI {
 
             gtk_builder_add_from_file(gtkBuilder, "window.glade", NULL);
 
-            window = new Window(Coordinate(-100.0, -100.0), Coordinate(100.0, 100.0));
+            window = new Window(Coordinate3D(-100.0, -100.0, 0.0), Coordinate3D(100.0, 100.0, 0.0));
 
             window_widget = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "main_window"));
             drawing_area  = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "drawing_area"));
@@ -125,21 +125,21 @@ namespace UI {
         int init() {
             window_add_figure = GTK_WIDGET(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "window_add_figure"));
 
-            entry_ponto_x =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x"));
-            entry_ponto_y =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y"));
-            // entry_ponto_z =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_z"));
-            entry_ponto_x1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x1"));
-            entry_ponto_y1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y1"));
-            // entry_ponto_z1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_z1"));
-            entry_ponto_x2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x2"));
-            entry_ponto_y2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y2"));
-            // entry_ponto_z2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_z2"));
-            entry_ponto_x3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x3"));
-            entry_ponto_y3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y3"));
-            // entry_ponto_z3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_z3"));
-            entry_ponto_x4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_x4"));
-            entry_ponto_y4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_y4"));
-            // entry_ponto_z4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_ponto_z4"));
+            entry_point_x =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_x"));
+            entry_point_y =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_y"));
+            entry_point_z =  GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_z"));
+            entry_point_x1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_x1"));
+            entry_point_y1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_y1"));
+            entry_point_z1 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_z1"));
+            entry_point_x2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_x2"));
+            entry_point_y2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_y2"));
+            entry_point_z2 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_z2"));
+            entry_point_x3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_x3"));
+            entry_point_y3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_y3"));
+            entry_point_z3 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_z3"));
+            entry_point_x4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_x4"));
+            entry_point_y4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_y4"));
+            entry_point_z4 = GTK_ENTRY(gtk_builder_get_object(GTK_BUILDER(gtkBuilder), "entry_point_z4"));
 
             gtk_builder_connect_signals(gtkBuilder, NULL);
 
@@ -162,14 +162,14 @@ namespace UI {
             store_figure(name);
 
             coordinates.clear();
-            coordinates.push_back(new Coordinate3D(0,  100, 0));
-            coordinates.push_back(new Coordinate3D(0, -100, 0));
+            coordinates.push_back(new Coordinate3D(0,  100,  10));
+            coordinates.push_back(new Coordinate3D(0, -100, -10));
             name = window->AddLine(coordinates);
             store_figure(name);
 
             coordinates.clear();
-            coordinates.push_back(new Coordinate3D( 100, 0, 0));
-            coordinates.push_back(new Coordinate3D(-100, 0, 0));
+            coordinates.push_back(new Coordinate3D( 100, 0,  10));
+            coordinates.push_back(new Coordinate3D(-100, 0, -10));
             name = window->AddLine(coordinates);
             store_figure(name);
 
@@ -278,14 +278,14 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_zoom_in_clicked_cb(GtkWidget *button) {
-        window->zoom(0.85, 0.85);
+        window->zoom(0.85, 0.85, 1);
         viewPort->redraw();
 
         UI::write_status("zoom in");
     }
 
     void on_btn_zoom_out_clicked_cb(GtkWidget *button) {
-        window->zoom(1.15, 1.15);
+        window->zoom(1.15, 1.15, 1);
         viewPort->redraw();
 
         UI::write_status("zoom out");
@@ -448,10 +448,9 @@ G_MODULE_EXPORT {
         if (!coordinates.empty())
             coordinates.clear();
 
-        float x = atof(gtk_entry_get_text(entry_ponto_x));
-        float y = atof(gtk_entry_get_text(entry_ponto_y));
-        // float z = atof(gtk_entry_get_text(entry_ponto_z));
-        float z = 0.0f;
+        float x = atof(gtk_entry_get_text(entry_point_x));
+        float y = atof(gtk_entry_get_text(entry_point_y));
+        float z = atof(gtk_entry_get_text(entry_point_z));
 
         coordinates.push_back(new Coordinate3D(x, y, z));
 
@@ -473,14 +472,13 @@ G_MODULE_EXPORT {
         if (!coordinates.empty())
             coordinates.clear();
 
-        float x1 = atof(gtk_entry_get_text(entry_ponto_x1));
-        float y1 = atof(gtk_entry_get_text(entry_ponto_y1));
-        // float z1 = atof(gtk_entry_get_text(entry_ponto_z1));
-        float z1 = 0.0f;
-        float x2 = atof(gtk_entry_get_text(entry_ponto_x2));
-        float y2 = atof(gtk_entry_get_text(entry_ponto_y2));
-        // float z2 = atof(gtk_entry_get_text(entry_ponto_z2));
-        float z2 = 0.0f;
+        float x1 = atof(gtk_entry_get_text(entry_point_x1));
+        float y1 = atof(gtk_entry_get_text(entry_point_y1));
+        float z1 = atof(gtk_entry_get_text(entry_point_z1));
+
+        float x2 = atof(gtk_entry_get_text(entry_point_x2));
+        float y2 = atof(gtk_entry_get_text(entry_point_y2));
+        float z2 = atof(gtk_entry_get_text(entry_point_z2));
 
         coordinates.push_back(new Coordinate3D(x1, y1, z1));
         coordinates.push_back(new Coordinate3D(x2, y2, z2));
@@ -500,10 +498,9 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_coordenada_clicked() {
-        float x3 = atof(gtk_entry_get_text(entry_ponto_x3));
-        float y3 = atof(gtk_entry_get_text(entry_ponto_y3));
-        // float z3 = atof(gtk_entry_get_text(entry_ponto_z3));
-        float z3 = 0.0f;
+        float x3 = atof(gtk_entry_get_text(entry_point_x3));
+        float y3 = atof(gtk_entry_get_text(entry_point_y3));
+        float z3 = atof(gtk_entry_get_text(entry_point_z3));
 
         Coordinate3D *temp = new Coordinate3D(x3, y3, z3);
         UI::store_coordinate(temp);
@@ -529,10 +526,9 @@ G_MODULE_EXPORT {
     }
 
     void on_btn_add_curve_coordenada_clicked() {
-        float x4 = atof(gtk_entry_get_text(entry_ponto_x4));
-        float y4 = atof(gtk_entry_get_text(entry_ponto_y4));
-        // float z4 = atof(gtk_entry_get_text(entry_ponto_z4));
-        float z4 = 0.0f;
+        float x4 = atof(gtk_entry_get_text(entry_point_x4));
+        float y4 = atof(gtk_entry_get_text(entry_point_y4));
+        float z4 = atof(gtk_entry_get_text(entry_point_z4));
 
         Coordinate3D *temp = new Coordinate3D(x4, y4, z4);
         UI::store_curve_coordinate(temp);

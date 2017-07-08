@@ -21,6 +21,7 @@ class Geometry {
 public:
     string name;
     std::list<Coordinate3D *> world_coordinates;
+    std::list<Coordinate *> world_2D_coordinates;
     std::list<Coordinate *> window_coordinates;
 
     geometries::Type type;
@@ -73,60 +74,43 @@ public:
         }
     }
 
-    void rotate(float angle) {
+    void rotate(float angle, bool window = false) {
         float x = 0.0f;
         float y = 0.0f;
         float z = 0.0f;
-        // float d = 0.0f;
-        // float cosX = 0.0f;
-        // float sinX = 0.0f;
-        // float cosZ = 0.0f;
-        // float sinZ = 0.0f;
+        float d = 0.0f;
+        float cosX = 0.0f;
+        float sinX = 0.0f;
+        float cosZ = 0.0f;
+        float sinZ = 0.0f;
         auto center = GetObjectCenter();
 
-        // x = world_coordinates.front()->getX();
-        // y = world_coordinates.front()->getY();
-        // z = world_coordinates.front()->getZ();
+        if(!window) {
+            x = center.getX();
+            y = center.getY();
+            z = center.getZ();
+        }
 
-        x = center.getX();
-        y = center.getY();
-        z = center.getZ();
-
-        // cout << "x: " << x << endl;
-        // cout << "y: " << y << endl;
-        // cout << "z: " << z << endl;
-
-        // d = sqrt(pow(y, 2) + pow(z, 2));
-        // cosX = z/d;
-        // sinX = y/d;
-        // cosZ = d;
-        // sinZ = -1 * x;
-        // cout << "d: " << d << endl;
-        // cout << "cosx: " << acos(cosX) * 180 / PI << endl;
-        // cout << "sinx: " << acos(sinX) * 180 / PI << endl;
-        // cout << "cosz: " << acos(cosZ) * 180 / PI << endl;
-        // cout << "sinz: " << acos(sinZ) * 180 / PI << endl;
-
+        d = sqrt(pow(0, 2) + pow(1, 2));
+        cosX = (1)/d;
+        sinX = 0/d;
+        cosZ = d;
+        sinZ = 0;
 
         auto T1 = Transformation::TranslateMatrix3D(-x, -y, -z);
-        // auto Rx1 = Transformation::RotateMatrix3Dx(cosX, sinX);
-        // auto Rz1 = Transformation::RotateMatrix3Dy(cosZ, -sinZ);
+        auto Rx1 = Transformation::RotateMatrix3Dx(cosX, sinX);
+        auto Rz1 = Transformation::RotateMatrix3Dy(cosZ, -sinZ);
         auto Ry = Transformation::RotateMatrix3Dz(angle);
-        // auto Rz2 = Transformation::RotateMatrix3Dy(-cosZ, sinZ);
-        // auto Rx2 = Transformation::RotateMatrix3Dx(-cosX, -sinX);
+        auto Rz2 = Transformation::RotateMatrix3Dy(-cosZ, sinZ);
+        auto Rx2 = Transformation::RotateMatrix3Dx(-cosX, -sinX);
         auto T2 = Transformation::TranslateMatrix3D(x, y, z);
 
-        // auto result = Transformation::matrixProduct(
-        //     Transformation::matrixProduct(
-        //         Transformation::matrixProduct(
-        //             Transformation::matrixProduct(
-        //                 Transformation::matrixProduct(
-        //                     Transformation::matrixProduct(T1, Rx1), Rz1), Ry), Rz2), Rx2), T2);
-
         auto result = Transformation::matrixProduct4x4(
-                Transformation::matrixProduct4x4(T1, Ry), T2);
-
-        // Transformation::printMatrix(result);
+            Transformation::matrixProduct4x4(
+                Transformation::matrixProduct4x4(
+                    Transformation::matrixProduct4x4(
+                        Transformation::matrixProduct4x4(
+                            Transformation::matrixProduct4x4(T1, Rx1), Rz1), Ry), Rz2), Rx2), T2);
 
         for(auto coordinate : world_coordinates) {
             coordinate->transform(result);
